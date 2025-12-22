@@ -1,0 +1,92 @@
+PrincipioAtivoRequest:
+  type: object
+  required: [nome]
+  properties:
+    nome:
+      type: string
+      example: "Enrofloxacina"
+    descricao:
+      type: string
+    grupoFarmacologico:
+      type: string
+      example: "Antibiótico / Fluoroquinolona"
+
+PrincipioAtivoResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nome:
+      type: string
+    descricao:
+      type: string
+    grupoFarmacologico:
+      type: string
+
+# --- DTOs Medicamento ---
+MedicamentoRequest:
+  type: object
+  required: [nome, principioAtivoId]
+  properties:
+    nome:
+      type: string
+      example: "Baytril 10%"
+    principioAtivoId:
+      type: string
+      format: uuid
+    concentracao:
+      type: string
+      example: "100 mg/ml"
+    fabricante:
+      type: string
+    formaFarmaceutica:
+      type: string
+      example: "Injetável / Oral"
+
+MedicamentoResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nome:
+      type: string
+    principioAtivoId:
+      type: string
+      format: uuid
+    concentracao:
+      type: string
+    fabricante:
+      type: string
+    formaFarmaceutica:
+      type: string
+
+# --- Wrappers ---
+ApiResponsePrincipioAtivo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/PrincipioAtivoResponse' }
+
+ApiResponseListaPrincipioAtivo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/PrincipioAtivoResponse' }
+
+ApiResponseMedicamento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/MedicamentoResponse' }
+
+ApiResponseListaMedicamento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/MedicamentoResponse' }

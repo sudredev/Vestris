@@ -1,0 +1,32 @@
+paths:
+  /api/v1/especies:
+    post:
+      tags:
+        - Especies
+      summary: Cadastrar nova espécie
+      operationId: criarEspecie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/EspecieRequest'
+      responses:
+        '200':
+          description: Espécie criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseEspecie'
+
+    get:
+      tags:
+        - Especies
+      summary: Listar todas as espécies
+      operationId: listarEspecies
+      responses:
+        '200':
+          description: Lista recuperada
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseListaEspecie'

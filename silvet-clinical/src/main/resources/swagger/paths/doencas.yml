@@ -1,0 +1,30 @@
+post:
+  tags:
+    - Doencas
+  summary: Cadastrar nova doença
+  operationId: criarDoenca
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/DoencaRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseDoenca'
+
+get:
+  tags:
+    - Doencas
+  summary: Listar todas as doenças
+  operationId: listarDoencas
+  responses:
+    '200':
+      description: Lista recuperada
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseListaDoenca'

@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Silvet - Módulo Referências
+  description: Gestão de Bibliografia Científica
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/referencias:
+    $ref: "./paths/referencias.yml"
+
+components:
+  schemas:
+    ReferenciaRequest:
+      $ref: "./components/schemas.yml#/ReferenciaRequest"
+    ReferenciaResponse:
+      $ref: "./components/schemas.yml#/ReferenciaResponse"
+    ApiResponseReferencia:
+      $ref: "./components/schemas.yml#/ApiResponseReferencia"
+    ApiResponseListaReferencia:
+      $ref: "./components/schemas.yml#/ApiResponseListaReferencia"

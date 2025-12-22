@@ -1,0 +1,55 @@
+VacinaRequest:
+  type: object
+  required: [nome]
+  properties:
+    nome:
+      type: string
+      example: "Newcastle LaSota"
+    fabricante:
+      type: string
+      example: "BioVet"
+    tipoVacina:
+      type: string
+      description: "Vírus vivo, Inativada, Recombinante..."
+      example: "Vírus Vivo Atenuado"
+    descricao:
+      type: string
+    doencaAlvo:
+      type: string
+      description: "Nome da doença que ela previne (Texto livre por enquanto)"
+      example: "Doença de Newcastle"
+
+VacinaResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nome:
+      type: string
+    fabricante:
+      type: string
+    tipoVacina:
+      type: string
+    descricao:
+      type: string
+    doencaAlvo:
+      type: string
+    criadoEm:
+      type: string
+      format: date-time
+
+# Wrappers
+ApiResponseVacina:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/VacinaResponse' }
+
+ApiResponseListaVacina:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/VacinaResponse' }

@@ -1,0 +1,59 @@
+EspecieRequest:
+  type: object
+  required:
+    - nomePopular
+    - nomeCientifico
+  properties:
+    nomePopular:
+      type: string
+      example: "Arara-canindé"
+    nomeCientifico:
+      type: string
+      example: "Ara ararauna"
+    familiaTaxonomica:
+      type: string
+      example: "Psittacidae"
+    descricao:
+      type: string
+      example: "Ave grande e colorida..."
+
+EspecieResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nomePopular:
+      type: string
+    nomeCientifico:
+      type: string
+    familiaTaxonomica:
+      type: string
+    descricao:
+      type: string
+    criadoEm:
+      type: string
+      format: date-time
+
+ApiResponseEspecie:
+  type: object
+  properties:
+    sucesso:
+      type: boolean
+    mensagem:
+      type: string
+    dados:
+      $ref: '#/EspecieResponse'
+    dataHora:
+      type: string
+      format: date-time
+
+ApiResponseListaEspecie:
+  type: object
+  properties:
+    sucesso:
+      type: boolean
+    dados:
+      type: array
+      items:
+        $ref: '#/EspecieResponse'

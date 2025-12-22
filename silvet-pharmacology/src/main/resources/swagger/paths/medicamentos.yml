@@ -1,0 +1,30 @@
+post:
+  tags:
+    - Medicamentos
+  summary: Cadastrar medicamento comercial
+  operationId: criarMedicamento
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/MedicamentoRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseMedicamento'
+
+get:
+  tags:
+    - Medicamentos
+  summary: Listar medicamentos
+  operationId: listarMedicamentos
+  responses:
+    '200':
+      description: Lista
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseListaMedicamento'

@@ -1,0 +1,30 @@
+post:
+  tags:
+    - Vacinas
+  summary: Cadastrar nova vacina
+  operationId: criarVacina
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/VacinaRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseVacina'
+
+get:
+  tags:
+    - Vacinas
+  summary: Listar todas as vacinas
+  operationId: listarVacinas
+  responses:
+    '200':
+      description: Lista recuperada
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseListaVacina'

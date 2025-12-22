@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: Silvet - Módulo Farmacologia
+  description: Gestão de Medicamentos e Princípios Ativos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/principios-ativos:
+    $ref: './paths/principios-ativos.yml'
+  /api/v1/medicamentos:
+    $ref: './paths/medicamentos.yml'
+
+components:
+  schemas:
+    PrincipioAtivoRequest:
+      $ref: "./components/schemas.yml#/PrincipioAtivoRequest"
+    PrincipioAtivoResponse:
+      $ref: "./components/schemas.yml#/PrincipioAtivoResponse"
+    MedicamentoRequest:
+      $ref: "./components/schemas.yml#/MedicamentoRequest"
+    MedicamentoResponse:
+      $ref: "./components/schemas.yml#/MedicamentoResponse"
+    ApiResponsePrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponsePrincipioAtivo"
+    ApiResponseListaPrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponseListaPrincipioAtivo"
+    ApiResponseMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseMedicamento"
+    ApiResponseListaMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseListaMedicamento"
+
+
+

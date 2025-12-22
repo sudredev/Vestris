@@ -1,0 +1,7 @@
+# Ignora todos os testes gerados automaticamente
+src/test/**
+
+# Ignora arquivos de configuração inúteis
+pom.xml
+README.md
+.gitignore

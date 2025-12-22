@@ -1,0 +1,59 @@
+DoencaRequest:
+  type: object
+  required:
+    - nome
+    - especieId
+  properties:
+    nome:
+      type: string
+      example: "Psitacose (Clamidiose)"
+    nomeCientifico:
+      type: string
+      example: "Chlamydia psittaci"
+    sintomas:
+      type: string
+      example: "Apatia, penas arrepiadas, diarreia verde..."
+    especieId:
+      type: string
+      format: uuid
+      description: "ID da Espécie afetada"
+
+DoencaResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nome:
+      type: string
+    nomeCientifico:
+      type: string
+    sintomas:
+      type: string
+    especieId:
+      type: string
+      format: uuid
+    criadoEm:
+      type: string
+      format: date-time
+
+# Wrappers
+ApiResponseDoenca:
+  type: object
+  properties:
+    sucesso:
+      type: boolean
+    mensagem:
+      type: string
+    dados:
+      $ref: '#/DoencaResponse'
+
+ApiResponseListaDoenca:
+  type: object
+  properties:
+    sucesso:
+      type: boolean
+    dados:
+      type: array
+      items:
+        $ref: '#/DoencaResponse'

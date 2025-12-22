@@ -1,0 +1,30 @@
+post:
+  tags:
+    - PrincipiosAtivos
+  summary: Cadastrar princípio ativo
+  operationId: criarPrincipioAtivo
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/PrincipioAtivoRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponsePrincipioAtivo'
+
+get:
+  tags:
+    - PrincipiosAtivos
+  summary: Listar todos
+  operationId: listarPrincipiosAtivos
+  responses:
+    '200':
+      description: Lista
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseListaPrincipioAtivo'

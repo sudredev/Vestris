@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  title: Silvet - Módulo Clínico
+  description: Gestão de Doenças e Protocolos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/doencas:
+    $ref: './paths/doencas.yml'
+  /api/v1/doencas/por-especie/{especieId}:
+    $ref: './paths/doencas-especie.yml'
+
+    # Importando os componentes (necessário declarar aqui também para o parser raiz entender)
+components:
+  schemas:
+    DoencaRequest:
+      $ref: "./components/schemas.yml#/DoencaRequest"
+    DoencaResponse:
+      $ref: "./components/schemas.yml#/DoencaResponse"
+    ApiResponseDoenca:
+      $ref: "./components/schemas.yml#/ApiResponseDoenca"
+    ApiResponseListaDoenca:
+      $ref: "./components/schemas.yml#/ApiResponseListaDoenca"
+

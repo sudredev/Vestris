@@ -1,0 +1,30 @@
+post:
+  tags:
+    - Referencias
+  summary: Cadastrar nova referência
+  operationId: criarReferencia
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/ReferenciaRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseReferencia'
+
+get:
+  tags:
+    - Referencias
+  summary: Listar todas as referências
+  operationId: listarReferencias
+  responses:
+    '200':
+      description: Lista recuperada
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseListaReferencia'
