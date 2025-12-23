@@ -10,24 +10,24 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>br.com.silvet</groupId>
-    <artifactId>silvet-backend</artifactId>
+    <groupId>br.com.vestris</groupId>
+    <artifactId>vestris-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Silvet Backend</name>
-    <description>Sistema de Apoio Clínico a Animais Silvestres</description>
+    <name>Vestris Backend</name>
+    <description>Sistema de Apoio Clínico a Animais Silvestres e Exóticos</description>
 
     <!-- ISSO AQUI TRANSFORMA O PROJETO EM UM AGREGADOR DE MÓDULOS -->
     <packaging>pom</packaging>
 
     <modules>
-        <module>silvet-shared</module>
-        <module>silvet-user</module>
-        <module>silvet-species</module>
-        <module>silvet-clinical</module>
-        <module>silvet-pharmacology</module>
-        <module>silvet-vaccination</module>
-        <module>silvet-reference</module>
-        <module>silvet-portal</module>
+        <module>vestris-shared</module>
+        <module>vestris-user</module>
+        <module>vestris-species</module>
+        <module>vestris-clinical</module>
+        <module>vestris-pharmacology</module>
+        <module>vestris-vaccination</module>
+        <module>vestris-reference</module>
+        <module>vestris-portal</module>
     </modules>
 
     <properties>

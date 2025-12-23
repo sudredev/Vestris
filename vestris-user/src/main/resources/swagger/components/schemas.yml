@@ -1,0 +1,65 @@
+RegistroRequest:
+  type: object
+  required: [nome, email, senha]
+  properties:
+    nome:
+      type: string
+      example: "Ana Veterinária"
+    email:
+      type: string
+      format: email
+      example: "ana@vet.com"
+    senha:
+      type: string
+      format: password
+      example: "SenhaForte123!"
+    crmv:
+      type: string
+      description: "Registro profissional (opcional)"
+
+LoginRequest:
+  type: object
+  required: [email, senha]
+  properties:
+    email:
+      type: string
+    senha:
+      type: string
+
+UsuarioResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    nome:
+      type: string
+    email:
+      type: string
+    perfil:
+      type: string
+      enum: [ADMIN, VETERINARIO, ESTUDANTE]
+
+TokenResponse:
+  type: object
+  properties:
+    token:
+      type: string
+    tipo:
+      type: string
+      example: "Bearer"
+    expiraEm:
+      type: string
+
+# Wrappers
+ApiResponseUsuario:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/UsuarioResponse' }
+
+ApiResponseToken:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/TokenResponse' }

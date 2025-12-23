@@ -1,0 +1,17 @@
+post:
+  tags:
+    - Autenticacao
+  summary: Criar nova conta
+  operationId: registrarUsuario
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/RegistroRequest'
+  responses:
+    '200':
+      description: Conta criada
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseUsuario'

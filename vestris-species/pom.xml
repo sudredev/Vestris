@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>br.com.vestris</groupId>
+        <artifactId>vestris-backend</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>vestris-species</artifactId>
+
+    <dependencies>
+        <!-- Módulo Compartilhado (EntidadeBase, RespostaApi) -->
+        <dependency>
+            <groupId>br.com.vestris</groupId>
+            <artifactId>vestris-shared</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Dependências OBRIGATÓRIAS para o código gerado pelo OpenAPI -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>2.2.19</version>
+        </dependency>
+
+        <!-- SWAGGER: Models (ESSA ERA A QUE FALTAVA! Para classe OpenAPI) -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>2.2.19</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+
+        <!-- LOMBOK: Para getters/setters automáticos -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- JPA: Para usar @Entity, @Id, @MappedSuperclass -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Web Starter (Necessário para as anotações Spring Web geradas) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin do OpenAPI Generator -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Seus caminhos (mantenha como estão) -->
+                            <inputSpec>${project.basedir}/src/main/resources/swagger/openapi.yml</inputSpec>
+                            <ignoreFileOverride>${project.basedir}/.openapi-generator-ignore</ignoreFileOverride>
+
+                            <generatorName>spring</generatorName>
+                            <output>${project.build.directory}/generated-sources/openapi</output>
+                            <apiPackage>br.com.vestris.species.interfaces.api</apiPackage> <!-- (Mude para 'clinical' no outro pom) -->
+                            <modelPackage>br.com.vestris.species.interfaces.dto</modelPackage> <!-- (Mude para 'clinical' no outro pom) -->
+
+                            <!-- Desliga testes de API e Modelos -->
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+
+                            <!-- O SEGREDO ESTÁ AQUI: -->
+                            <!-- Dizemos explicitamente: "Gere APENAS o ApiUtil.java. Não gere Application.java nem Tests.java" -->
+                            <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
+
+                            <configOptions>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>false</interfaceOnly>
+                                <useSpringBoot3>true</useSpringBoot3>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

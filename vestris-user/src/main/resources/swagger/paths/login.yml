@@ -1,0 +1,17 @@
+post:
+  tags:
+    - Autenticacao
+  summary: Fazer login e obter Token
+  operationId: login
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/LoginRequest'
+  responses:
+    '200':
+      description: Login com sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseToken'

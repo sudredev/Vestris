@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Vacinação
+  description: Gestão de Imunobiológicos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/vacinas:
+    $ref: "./paths/vacinas.yml"
+
+components:
+  schemas:
+    VacinaRequest:
+      $ref: "./components/schemas.yml#/VacinaRequest"
+    VacinaResponse:
+      $ref: "./components/schemas.yml#/VacinaResponse"
+    ApiResponseVacina:
+      $ref: "./components/schemas.yml#/ApiResponseVacina"
+    ApiResponseListaVacina:
+      $ref: "./components/schemas.yml#/ApiResponseListaVacina"

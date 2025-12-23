@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Farmacologia
+  description: Gestão de Medicamentos e Princípios Ativos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/principios-ativos:
+    $ref: './paths/principios-ativos.yml'
+  /api/v1/medicamentos:
+    $ref: './paths/medicamentos.yml'
+  /api/v1/contraindicacoes:
+    $ref: './paths/contraindicacoes.yml'
+  /api/v1/medicamentos/{medicamentoId}/contraindicacoes:
+    $ref: './paths/contraindicacoes-medicamentos.yml'
+
+components:
+  schemas:
+    PrincipioAtivoRequest:
+      $ref: "./components/schemas.yml#/PrincipioAtivoRequest"
+    PrincipioAtivoResponse:
+      $ref: "./components/schemas.yml#/PrincipioAtivoResponse"
+    MedicamentoRequest:
+      $ref: "./components/schemas.yml#/MedicamentoRequest"
+    MedicamentoResponse:
+      $ref: "./components/schemas.yml#/MedicamentoResponse"
+    ContraindicacaoRequest:
+      $ref: "./components/schemas.yml#/ContraindicacaoRequest"
+    ContraindicacaoResponse:
+      $ref: "./components/schemas.yml#/ContraindicacaoResponse"
+    ApiResponsePrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponsePrincipioAtivo"
+    ApiResponseListaPrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponseListaPrincipioAtivo"
+    ApiResponseMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseMedicamento"
+    ApiResponseListaMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseListaMedicamento"
+    ApiResponseContraindicacao:
+      $ref: "./components/schemas.yml#/ApiResponseContraindicacao"
+    ApiResponseListaContraindicacao:
+      $ref: "./components/schemas.yml#/ApiResponseListaContraindicacao"
+
+
+

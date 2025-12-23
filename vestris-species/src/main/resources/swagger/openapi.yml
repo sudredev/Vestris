@@ -1,0 +1,21 @@
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Espécies
+  description: API de Taxonomia do Silvet
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+# Importando os caminhos
+paths:
+  /api/v1/especies:
+    $ref: './paths/especies.yml#/paths/~1api~1v1~1especies'
+
+# Importando os componentes (necessário declarar aqui também para o parser raiz entender)
+components:
+  schemas:
+    EspecieRequest:
+      $ref: "./components/schemas.yml#/EspecieRequest"
+    EspecieResponse:
+      $ref: "./components/schemas.yml#/EspecieResponse"

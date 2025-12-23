@@ -1,0 +1,17 @@
+post:
+  tags:
+    - Contraindicacoes
+  summary: Cadastrar contraindicação
+  operationId: criarContraindicacao
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas.yml#/ContraindicacaoRequest'
+  responses:
+    '200':
+      description: Sucesso
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ApiResponseContraindicacao'

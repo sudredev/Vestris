@@ -6,4 +6,4 @@ CREATE SCHEMA IF NOT EXISTS vaccination_schema;
 CREATE SCHEMA IF NOT EXISTS reference_schema;
 
 -- Conceder permissões (se necessário em prod, aqui é local)
-GRANT ALL PRIVILEGES ON DATABASE silvet_db TO silvet_user;
+GRANT ALL PRIVILEGES ON DATABASE vestris_db TO vestris_user;

@@ -2,11 +2,11 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: silvet-db
+    container_name: vestris-db
     environment:
-      POSTGRES_DB: silvet_db
-      POSTGRES_USER: silvet_user
-      POSTGRES_PASSWORD: silvet_password
+      POSTGRES_DB: vestris_db
+      POSTGRES_USER: vestris_user
+      POSTGRES_PASSWORD: vestris_password
     ports:
       - "5432:5432"
     volumes:
