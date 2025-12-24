@@ -1,5 +1,20 @@
 paths:
+  # ---------------------------------------------------------
+  # ROTA 1: Coleção (Listar / Criar)
+  # ---------------------------------------------------------
   /api/v1/especies:
+    get:
+      tags:
+        - Especies
+      summary: Listar todas as espécies
+      operationId: listarEspecies
+      responses:
+        '200':
+          description: Lista recuperada
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseListaEspecie'
     post:
       tags:
         - Especies
@@ -18,15 +33,54 @@ paths:
               schema:
                 $ref: '../components/schemas.yml#/ApiResponseEspecie'
 
+  # ---------------------------------------------------------
+  # ROTA 2: Item Específico (Buscar / Editar / Deletar)
+  # ---------------------------------------------------------
+  /api/v1/especies/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
     get:
       tags:
         - Especies
-      summary: Listar todas as espécies
-      operationId: listarEspecies
+      summary: Buscar espécie por ID
+      operationId: buscarEspeciePorId
       responses:
         '200':
-          description: Lista recuperada
+          description: Encontrado
           content:
             application/json:
               schema:
-                $ref: '../components/schemas.yml#/ApiResponseListaEspecie'
+                $ref: '../components/schemas.yml#/ApiResponseEspecie'
+
+    put:
+      tags:
+        - Especies
+      summary: Atualizar dados da espécie
+      operationId: atualizarEspecie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/EspecieRequest'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseEspecie'
+
+    delete:
+      tags:
+        - Especies
+      summary: Remover espécie
+      operationId: deletarEspecie
+      responses:
+        '204':
+          description: Removido com sucesso

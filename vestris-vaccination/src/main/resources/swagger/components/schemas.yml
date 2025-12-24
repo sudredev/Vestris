@@ -4,20 +4,14 @@ VacinaRequest:
   properties:
     nome:
       type: string
-      example: "Newcastle LaSota"
     fabricante:
       type: string
-      example: "BioVet"
     tipoVacina:
       type: string
-      description: "Vírus vivo, Inativada, Recombinante..."
-      example: "Vírus Vivo Atenuado"
     descricao:
       type: string
     doencaAlvo:
       type: string
-      description: "Nome da doença que ela previne (Texto livre por enquanto)"
-      example: "Doença de Newcastle"
 
 VacinaResponse:
   type: object
@@ -39,17 +33,84 @@ VacinaResponse:
       type: string
       format: date-time
 
+# --- PROTOCOLO VACINAL (NOVO) ---
+ProtocoloVacinalRequest:
+  type: object
+  required: [especieId, vacinaId, referenciaId, idadeMinimaDias]
+  properties:
+    especieId:
+      type: string
+      format: uuid
+    vacinaId:
+      type: string
+      format: uuid
+    referenciaId:
+      type: string
+      format: uuid
+      description: "Fonte científica ou legal que exige/recomenda esta vacina"
+    idadeMinimaDias:
+      type: integer
+      example: 45
+    diasParaReforco:
+      type: integer
+      description: "Se nulo ou zero, é dose única"
+      example: 21
+    obrigatoria:
+      type: boolean
+      description: "Se é exigida por lei (IBAMA/MAPA)"
+    observacoes:
+      type: string
+      example: "Apenas para animais que terão contato com aves de produção."
+
+ProtocoloVacinalResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    especieId:
+      type: string
+      format: uuid
+    vacinaId:
+      type: string
+      format: uuid
+    referenciaId:
+      type: string
+      format: uuid
+    nomeVacina:
+      type: string
+    idadeMinimaDias:
+      type: integer
+    diasParaReforco:
+      type: integer
+    obrigatoria:
+      type: boolean
+    observacoes:
+      type: string
+
 # Wrappers
 ApiResponseVacina:
   type: object
   properties:
     sucesso: { type: boolean }
+    mensagem:
+      type: string
     dados: { $ref: '#/VacinaResponse' }
-
 ApiResponseListaVacina:
   type: object
   properties:
     sucesso: { type: boolean }
-    dados:
-      type: array
-      items: { $ref: '#/VacinaResponse' }
+    dados: { type: array, items: { $ref: '#/VacinaResponse' } }
+
+ApiResponseProtocoloVacinal:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem:
+      type: string
+    dados: { $ref: '#/ProtocoloVacinalResponse' }
+ApiResponseListaProtocoloVacinal:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { type: array, items: { $ref: '#/ProtocoloVacinalResponse' } }

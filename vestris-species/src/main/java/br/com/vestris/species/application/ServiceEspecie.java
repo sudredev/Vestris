@@ -5,6 +5,7 @@ import br.com.vestris.shared.domain.exceptions.ExceptionRecursoNaoEncontrado;
 import br.com.vestris.species.domain.Especie;
 import br.com.vestris.species.domain.repository.RepositorioEspecie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,33 @@ public class ServiceEspecie {
 
     public boolean existePorId(UUID id) {
         return repositorio.existsById(id);
+    }
+
+    // ATUALIZAR
+    public Especie atualizar(UUID id, Especie dadosAtualizados) {
+        Especie existente = repositorio.findById(id)
+                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Espécie", id.toString()));
+
+        // Atualiza os campos (Exceto ID e Datas)
+        existente.setNomePopular(dadosAtualizados.getNomePopular());
+        existente.setNomeCientifico(dadosAtualizados.getNomeCientifico());
+        existente.setFamiliaTaxonomica(dadosAtualizados.getFamiliaTaxonomica());
+        existente.setDescricao(dadosAtualizados.getDescricao());
+
+        return repositorio.save(existente);
+    }
+
+    // DELETAR
+    public void deletar(UUID id) {
+        if (!repositorio.existsById(id)) {
+            throw new ExceptionRecursoNaoEncontrado("Espécie", id.toString());
+        }
+
+        try {
+            repositorio.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            // Captura erro do banco se tentar apagar algo que tem filhos (FK)
+            throw new ExcecaoRegraNegocio("Não é possível remover esta espécie pois ela possui registros vinculados (Doenças, Protocolos, etc).");
+        }
     }
 }

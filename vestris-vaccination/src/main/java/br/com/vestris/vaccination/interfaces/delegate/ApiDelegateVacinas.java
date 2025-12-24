@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -65,5 +66,38 @@ public class ApiDelegateVacinas implements VacinasApiDelegate {
             dto.setCriadoEm(v.getCriadoEm().atOffset(ZoneOffset.UTC));
         }
         return dto;
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseVacina> buscarVacinaPorId(UUID id) {
+        Vacina v = servico.buscarPorId(id);
+        ApiResponseVacina response = new ApiResponseVacina();
+        response.setSucesso(true);
+        response.setDados(converter(v));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseVacina> atualizarVacina(UUID id, VacinaRequest request) {
+        Vacina dados = new Vacina();
+        dados.setNome(request.getNome());
+        dados.setFabricante(request.getFabricante());
+        dados.setTipoVacina(request.getTipoVacina());
+        dados.setDescricao(request.getDescricao());
+        dados.setDoencaAlvo(request.getDoencaAlvo());
+
+        Vacina atualizada = servico.atualizar(id, dados);
+
+        ApiResponseVacina response = new ApiResponseVacina();
+        response.setSucesso(true);
+        response.setMensagem("Vacina atualizada.");
+        response.setDados(converter(atualizada));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarVacina(UUID id) {
+        servico.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

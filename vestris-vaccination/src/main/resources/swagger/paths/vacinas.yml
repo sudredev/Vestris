@@ -1,30 +1,79 @@
-post:
-  tags:
-    - Vacinas
-  summary: Cadastrar nova vacina
-  operationId: criarVacina
-  requestBody:
-    content:
-      application/json:
-        schema:
-          $ref: '../components/schemas.yml#/VacinaRequest'
-  responses:
-    '200':
-      description: Sucesso
+# Rota: /api/v1/vacinas
+vacinas_colecao:
+  post:
+    tags:
+      - Vacinas
+    summary: Cadastrar vacina
+    operationId: criarVacina
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponseVacina'
+            $ref: '../components/schemas.yml#/VacinaRequest'
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseVacina'
+  get:
+    tags:
+      - Vacinas
+    summary: Listar todas
+    operationId: listarVacinas
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseListaVacina'
 
-get:
-  tags:
-    - Vacinas
-  summary: Listar todas as vacinas
-  operationId: listarVacinas
-  responses:
-    '200':
-      description: Lista recuperada
+# Rota: /api/v1/vacinas/{id}
+vacinas_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - Vacinas
+    summary: Buscar por ID
+    operationId: buscarVacinaPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseVacina'
+  put:
+    tags:
+      - Vacinas
+    summary: Atualizar vacina
+    operationId: atualizarVacina
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponseListaVacina'
+            $ref: '../components/schemas.yml#/VacinaRequest'
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseVacina'
+  delete:
+    tags:
+      - Vacinas
+    summary: Remover vacina
+    description: "Não permite remover se estiver em uso num protocolo"
+    operationId: deletarVacina
+    responses:
+      '204':
+        description: Removido

@@ -19,6 +19,20 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- Para validar a Espécie -->
+        <dependency>
+            <groupId>br.com.vestris</groupId> <!-- ou br.com.vestris -->
+            <artifactId>vestris-species</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Para validar a Fonte/Referência (CRÍTICO) -->
+        <dependency>
+            <groupId>br.com.vestris</groupId>
+            <artifactId>vestris-reference</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- Swagger e Web -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>

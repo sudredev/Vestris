@@ -9,9 +9,23 @@ servers:
 
 paths:
   /api/v1/doencas:
-    $ref: './paths/doencas.yml'
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas'
+
+  /api/v1/doencas/{id}:
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas~1{id}'
+
   /api/v1/doencas/por-especie/{especieId}:
-    $ref: './paths/doencas-especie.yml'
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas~1por-especie~1{especieId}'
+
+  /api/v1/protocolos:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1protocolos'
+
+  /api/v1/protocolos/{id}:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1protocolos~1{id}'
+
+  /api/v1/doencas/{doencaId}/protocolos:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1doencas~1{doencaId}~1protocolos'
+
 
     # Importando os componentes (necessário declarar aqui também para o parser raiz entender)
 components:
@@ -24,4 +38,17 @@ components:
       $ref: "./components/schemas.yml#/ApiResponseDoenca"
     ApiResponseListaDoenca:
       $ref: "./components/schemas.yml#/ApiResponseListaDoenca"
+    DosagemItemRequest:
+      $ref: "./components/schemas.yml#/DosagemItemRequest"
+    DosagemResponse:
+      $ref: "./components/schemas.yml#/DosagemResponse"
+    ProtocoloRequest:
+      $ref: "./components/schemas.yml#/ProtocoloRequest"
+    ProtocoloResponse:
+      $ref: "./components/schemas.yml#/ProtocoloResponse"
+    ApiResponseProtocolo:
+      $ref: "./components/schemas.yml#/ApiResponseProtocolo"
+    ApiResponseListaProtocolo:
+      $ref: "./components/schemas.yml#/ApiResponseListaProtocolo"
+
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -65,5 +66,42 @@ public class ApiDelegateReferencias implements ReferenciasApiDelegate {
             dto.setCriadoEm(ref.getCriadoEm().atOffset(ZoneOffset.UTC));
         }
         return dto;
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseReferencia> buscarReferenciaPorId(UUID id) {
+        // 1. Busca a entidade
+        var entidade = servico.buscarPorId(id);
+
+        // 2. Instancia a resposta (Sem Builder)
+        ApiResponseReferencia response = new ApiResponseReferencia();
+        response.setSucesso(true);
+        response.setDados(converter(entidade));
+
+        // 3. Retorna
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseReferencia> atualizarReferencia(UUID id, ReferenciaRequest request) {
+        ReferenciaBibliografica dados = new ReferenciaBibliografica();
+        dados.setTitulo(request.getTitulo());
+        dados.setAutores(request.getAutores());
+        dados.setAno(request.getAno());
+        dados.setFonte(request.getFonte());
+        dados.setUrl(request.getUrl());
+
+        ReferenciaBibliografica atualizada = servico.atualizar(id, dados);
+
+        ApiResponseReferencia response = new ApiResponseReferencia();
+        response.setSucesso(true);
+        response.setDados(converter(atualizada));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarReferencia(UUID id) {
+        servico.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

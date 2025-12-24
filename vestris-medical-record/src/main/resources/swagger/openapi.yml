@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Vestris - Prontuário Eletrônico
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  # --- PACIENTES ---
+  /api/v1/pacientes:
+    $ref: './paths/pacientes.yml#/pacientes_item'
+
+  /api/v1/pacientes/{id}:
+    $ref: './paths/pacientes.yml#/paciente_por_id'
+
+  # --- ATENDIMENTOS ---
+  /api/v1/atendimentos:
+    $ref: './paths/atendimentos.yml#/atendimentos_item'
+
+  /api/v1/pacientes/{pacienteId}/atendimentos:
+    $ref: './paths/atendimentos.yml#/atendimentos_por_paciente'
+  
+  /api/v1/atendimentos/{id}:
+    $ref: './paths/atendimentos.yml#/atendimentos_por_id'
+
+components:
+  schemas:
+    PacienteRequest:
+      $ref: "./components/schemas.yml#/PacienteRequest"
+    PacienteResponse:
+      $ref: "./components/schemas.yml#/PacienteResponse"
+    AtendimentoRequest:
+      $ref: "./components/schemas.yml#/AtendimentoRequest"
+    AtendimentoResponse:
+      $ref: "./components/schemas.yml#/AtendimentoResponse"
+    ApiResponsePaciente:
+      $ref: "./components/schemas.yml#/ApiResponsePaciente"
+    ApiResponseListaPaciente:
+      $ref: "./components/schemas.yml#/ApiResponseListaPaciente"
+    ApiResponseAtendimento:
+      $ref: "./components/schemas.yml#/ApiResponseAtendimento"
+    ApiResponseListaAtendimento:
+      $ref: "./components/schemas.yml#/ApiResponseListaAtendimento"

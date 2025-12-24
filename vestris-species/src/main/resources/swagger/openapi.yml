@@ -12,10 +12,16 @@ paths:
   /api/v1/especies:
     $ref: './paths/especies.yml#/paths/~1api~1v1~1especies'
 
-# Importando os componentes (necessário declarar aqui também para o parser raiz entender)
+  /api/v1/especies/{id}:
+    $ref: './paths/especies.yml#/paths/~1api~1v1~1especies~1{id}'
+
 components:
   schemas:
     EspecieRequest:
       $ref: "./components/schemas.yml#/EspecieRequest"
     EspecieResponse:
       $ref: "./components/schemas.yml#/EspecieResponse"
+    ApiResponseEspecie:
+      $ref: "./components/schemas.yml#/ApiResponseEspecie"
+    ApiResponseListaEspecie:
+      $ref: "./components/schemas.yml#/ApiResponseListaEspecie"

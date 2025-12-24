@@ -1,30 +1,78 @@
-post:
-  tags:
-    - Medicamentos
-  summary: Cadastrar medicamento comercial
-  operationId: criarMedicamento
-  requestBody:
-    content:
-      application/json:
-        schema:
-          $ref: '../components/schemas.yml#/MedicamentoRequest'
-  responses:
-    '200':
-      description: Sucesso
+# Rota: /api/v1/medicamentos
+medicamentos_colecao:
+  post:
+    tags:
+      - Medicamentos
+    summary: Cadastrar medicamento
+    operationId: criarMedicamento
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponseMedicamento'
+            $ref: '../components/schemas.yml#/MedicamentoRequest'
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseMedicamento'
+  get:
+    tags:
+      - Medicamentos
+    summary: Listar medicamentos
+    operationId: listarMedicamentos
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseListaMedicamento'
 
-get:
-  tags:
-    - Medicamentos
-  summary: Listar medicamentos
-  operationId: listarMedicamentos
-  responses:
-    '200':
-      description: Lista
+# Rota: /api/v1/medicamentos/{id}
+medicamentos_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - Medicamentos
+    summary: Buscar por ID
+    operationId: buscarMedicamentoPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseMedicamento'
+  put:
+    tags:
+      - Medicamentos
+    summary: Atualizar
+    operationId: atualizarMedicamento
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponseListaMedicamento'
+            $ref: '../components/schemas.yml#/MedicamentoRequest'
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseMedicamento'
+  delete:
+    tags:
+      - Medicamentos
+    summary: Remover
+    operationId: deletarMedicamento
+    responses:
+      '204':
+        description: Removido

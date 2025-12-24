@@ -28,6 +28,7 @@
         <module>vestris-vaccination</module>
         <module>vestris-reference</module>
         <module>vestris-portal</module>
+        <module>vestris-medical-record</module>
     </modules>
 
     <properties>

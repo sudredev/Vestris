@@ -109,6 +109,8 @@ ApiResponseContraindicacao:
   type: object
   properties:
     sucesso: { type: boolean }
+    mensagem:
+      type: string
     dados: { $ref: '#/ContraindicacaoResponse' }
 
 ApiResponseListaContraindicacao:
@@ -123,6 +125,8 @@ ApiResponsePrincipioAtivo:
   type: object
   properties:
     sucesso: { type: boolean }
+    mensagem:
+      type: string
     dados: { $ref: '#/PrincipioAtivoResponse' }
 
 ApiResponseListaPrincipioAtivo:
@@ -137,6 +141,8 @@ ApiResponseMedicamento:
   type: object
   properties:
     sucesso: { type: boolean }
+    mensagem:
+      type:  string
     dados: { $ref: '#/MedicamentoResponse' }
 
 ApiResponseListaMedicamento:

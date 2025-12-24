@@ -8,19 +8,37 @@ servers:
     description: Servidor Local
 
 paths:
+  # --- PRINCÍPIOS ATIVOS ---
   /api/v1/principios-ativos:
-    $ref: './paths/principios-ativos.yml'
-  /api/v1/medicamentos:
-    $ref: './paths/medicamentos.yml'
-  /api/v1/contraindicacoes:
-    $ref: './paths/contraindicacoes.yml'
-  /api/v1/medicamentos/{medicamentoId}/contraindicacoes:
-    $ref: './paths/contraindicacoes-medicamentos.yml'
+    $ref: './paths/principios-ativos.yml#/principios_colecao'
 
+  /api/v1/principios-ativos/{id}:
+    $ref: './paths/principios-ativos.yml#/principios_item'
+
+  # --- MEDICAMENTOS ---
+  /api/v1/medicamentos:
+    $ref: './paths/medicamentos.yml#/medicamentos_colecao'
+
+  /api/v1/medicamentos/{id}:
+    $ref: './paths/medicamentos.yml#/medicamentos_item'
+
+  # --- CONTRAINDICAÇÕES ---
+  /api/v1/contraindicacoes:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_colecao'
+
+  /api/v1/medicamentos/{medicamentoId}/contraindicacoes:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_por_medicamento'
+
+  /api/v1/contraindicacoes/{id}:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_por_id'
+
+# Components (apenas referenciando o arquivo de schemas que você já tem)
 components:
   schemas:
     PrincipioAtivoRequest:
       $ref: "./components/schemas.yml#/PrincipioAtivoRequest"
+    # ... O Swagger vai resolver os outros automaticamente através das refs nos paths
+    # Mas se quiser garantir que apareçam na home do Swagger UI, liste todos aqui:
     PrincipioAtivoResponse:
       $ref: "./components/schemas.yml#/PrincipioAtivoResponse"
     MedicamentoRequest:
@@ -43,6 +61,3 @@ components:
       $ref: "./components/schemas.yml#/ApiResponseContraindicacao"
     ApiResponseListaContraindicacao:
       $ref: "./components/schemas.yml#/ApiResponseListaContraindicacao"
-
-
-

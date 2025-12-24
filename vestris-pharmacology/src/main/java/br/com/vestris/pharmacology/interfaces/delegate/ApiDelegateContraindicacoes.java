@@ -60,4 +60,44 @@ public class ApiDelegateContraindicacoes implements ContraindicacoesApiDelegate 
         dto.setGravidade(GravidadeEnum.valueOf(c.getGravidade().name()));
         return dto;
     }
+
+    @Override
+    public ResponseEntity<ApiResponseContraindicacao> buscarContraindicacaoPorId(UUID id) {
+        Contraindicacao encontrada = servico.buscarPorId(id);
+
+        ApiResponseContraindicacao response = new ApiResponseContraindicacao();
+        response.setSucesso(true);
+        response.setDados(converter(encontrada));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseContraindicacao> atualizarContraindicacao(UUID id, ContraindicacaoRequest request) {
+        // Converte o Enum do DTO para o Enum do Domínio
+        Contraindicacao.Gravidade gravidadeDominio = Contraindicacao.Gravidade.valueOf(request.getGravidade().name());
+
+        // Chama o serviço (Note que mantemos o Medicamento original, geralmente não se muda o medicamento da contraindicação, se cria outra)
+        // Mas se quiser permitir mudar medicamento, precisaria de mais validação no serviço.
+        // Aqui assumo que atualizamos Especie, Referencia, Gravidade e Descrição.
+
+        Contraindicacao atualizada = servico.atualizar(
+                id,
+                request.getEspecieId(),
+                request.getReferenciaId(),
+                gravidadeDominio,
+                request.getDescricao()
+        );
+
+        ApiResponseContraindicacao response = new ApiResponseContraindicacao();
+        response.setSucesso(true);
+        response.setMensagem("Contraindicação atualizada.");
+        response.setDados(converter(atualizada));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarContraindicacao(UUID id) {
+        servico.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

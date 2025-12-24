@@ -1,0 +1,86 @@
+paths:
+  /api/v1/protocolos:
+    post:
+      tags:
+        - Protocolos
+      summary: Criar protocolo terapêutico
+      operationId: criarProtocolo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ProtocoloRequest'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseProtocolo'
+
+  /api/v1/protocolos/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags:
+        - Protocolos
+      summary: Buscar protocolo por ID
+      operationId: buscarProtocoloPorId
+      responses:
+        '200':
+          description: Encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseProtocolo'
+    put:
+      tags:
+        - Protocolos
+      summary: Atualizar protocolo
+      operationId: atualizarProtocolo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ProtocoloRequest'
+      responses:
+        '200':
+          description: Atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseProtocolo'
+    delete:
+      tags:
+        - Protocolos
+      summary: Remover protocolo
+      operationId: deletarProtocolo
+      responses:
+        '204':
+          description: Removido
+
+  /api/v1/doencas/{doencaId}/protocolos:
+    get:
+      tags:
+        - Protocolos
+      summary: Listar protocolos de uma doença
+      operationId: listarProtocolosPorDoenca
+      parameters:
+        - name: doencaId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas.yml#/ApiResponseListaProtocolo'

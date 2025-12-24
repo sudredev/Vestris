@@ -37,7 +37,105 @@ DoencaResponse:
       type: string
       format: date-time
 
-# Wrappers
+DosagemItemRequest:
+  type: object
+  properties:
+    medicamentoId:
+      type: string
+      format: uuid
+    doseMinima:
+      type: number
+      format: double
+      example: 10.0
+    doseMaxima:
+      type: number
+      format: double
+      example: 20.0
+    unidade:
+      type: string
+      example: "mg/kg"
+    frequencia:
+      type: string
+      example: "BID (12/12h)"
+    duracao:
+      type: string
+      example: "7 dias"
+    via:
+      type: string
+      example: "Oral"
+
+ProtocoloRequest:
+  type: object
+  required: [ doencaId, referenciaId, titulo, dosagens ]
+  properties:
+    doencaId:
+      type: string
+      format: uuid
+    referenciaId:
+      type: string
+      format: uuid
+    titulo:
+      type: string
+      example: "Tratamento Padrão - Carpenter 2018"
+    observacoes:
+      type: string
+    dosagens:
+      type: array
+      items:
+        $ref: '#/DosagemItemRequest'
+
+# --- RESPONSES ---
+DosagemResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    medicamentoId:
+      type: string
+      format: uuid
+    dose:
+      type: string
+      description: "Texto formatado (ex: 10-20 mg/kg)"
+    detalhes:
+      type: string
+      description: "Via, frequência e duração"
+
+ProtocoloResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    titulo:
+      type: string
+    referenciaId:
+      type: string
+      format: uuid
+    observacoes:
+      type: string
+    dosagens:
+      type: array
+      items:
+        $ref: '#/DosagemResponse'
+
+    # --- WRAPPERS ---
+ApiResponseProtocolo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem:
+      type: string
+    dados: { $ref: '#/ProtocoloResponse' }
+
+ApiResponseListaProtocolo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/ProtocoloResponse' }
+
 ApiResponseDoenca:
   type: object
   properties:

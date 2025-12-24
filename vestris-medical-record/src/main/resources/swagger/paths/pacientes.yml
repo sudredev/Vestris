@@ -1,0 +1,72 @@
+# Rota: /api/v1/pacientes
+pacientes_item:
+  post:
+    tags: [Pacientes]
+    summary: Cadastrar novo paciente
+    operationId: criarPaciente
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/PacienteRequest' }
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponsePaciente' }
+  get:
+    tags: [Pacientes]
+    summary: Listar meus pacientes
+    description: "Filtra pelo veterinário logado (ou ID passado)"
+    operationId: listarPacientes
+    parameters:
+      - name: veterinarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaPaciente' }
+
+# Rota: /api/v1/pacientes/{id}
+paciente_por_id:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  get:
+    tags: [Pacientes]
+    summary: Buscar paciente por ID
+    operationId: buscarPacientePorId
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponsePaciente' }
+  put:
+    tags: [Pacientes]
+    summary: Atualizar dados do paciente
+    operationId: atualizarPaciente
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/PacienteRequest' }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponsePaciente' }
+
+  # --- BLOCO ADICIONADO ---
+  delete:
+    tags: [Pacientes]
+    summary: Remover paciente
+    description: "Remove o paciente apenas se não houver atendimentos vinculados"
+    operationId: deletarPaciente
+    responses:
+      '204':
+        description: Removido com sucesso (No Content)

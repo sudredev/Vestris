@@ -1,0 +1,66 @@
+# Rota: /api/v1/usuarios
+usuarios_colecao:
+  get:
+    tags: [GestaoUsuarios]
+    summary: Listar usuários com filtros
+    operationId: listarUsuarios
+    parameters:
+      - name: perfil
+        in: query
+        description: "Filtrar por perfil (VETERINARIO, ESTUDANTE, ADMIN)"
+        required: false
+        schema:
+          type: string
+          enum: [ADMIN, VETERINARIO, ESTUDANTE]
+      - name: apenasComCrmv
+        in: query
+        description: "Se true, traz apenas quem tem CRMV preenchido"
+        required: false
+        schema:
+          type: boolean
+    responses:
+      '200':
+        description: Lista recuperada
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseListaUsuario'
+
+# Rota: /api/v1/usuarios/{id}
+usuarios_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  get:
+    tags: [GestaoUsuarios]
+    summary: Buscar usuário por ID
+    operationId: buscarUsuarioPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseUsuario' }
+  put:
+    tags: [GestaoUsuarios]
+    summary: Atualizar dados cadastrais
+    description: "Atualiza nome e CRMV. Não atualiza senha/email por aqui."
+    operationId: atualizarUsuario
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/AtualizacaoUsuarioRequest' }
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseUsuario' }
+  delete:
+    tags: [GestaoUsuarios]
+    summary: Remover usuário
+    operationId: deletarUsuario
+    responses:
+      '204': { description: Removido }

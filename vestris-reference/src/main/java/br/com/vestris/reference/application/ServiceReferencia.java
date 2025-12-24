@@ -3,7 +3,9 @@ package br.com.vestris.reference.application;
 import br.com.vestris.reference.domain.model.ReferenciaBibliografica;
 import br.com.vestris.reference.domain.repository.RepositorioReferencia;
 import br.com.vestris.shared.domain.exceptions.ExcecaoRegraNegocio;
+import br.com.vestris.shared.domain.exceptions.ExceptionRecursoNaoEncontrado;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,5 +30,33 @@ public class ServiceReferencia {
 
     public boolean existePorId(UUID id) {
         return repositorio.existsById(id);
+    }
+
+    public ReferenciaBibliografica buscarPorId(UUID id) {
+        return repositorio.findById(id)
+                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Referência", id.toString()));
+    }
+
+    public ReferenciaBibliografica atualizar(UUID id, ReferenciaBibliografica dados) {
+        ReferenciaBibliografica existente = buscarPorId(id);
+
+        existente.setTitulo(dados.getTitulo());
+        existente.setAutores(dados.getAutores());
+        existente.setAno(dados.getAno());
+        existente.setFonte(dados.getFonte());
+        existente.setUrl(dados.getUrl());
+
+        return repositorio.save(existente);
+    }
+
+    public void deletar(UUID id) {
+        if (!repositorio.existsById(id)) {
+            throw new ExceptionRecursoNaoEncontrado("Referência", id.toString());
+        }
+        try {
+            repositorio.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ExcecaoRegraNegocio("Esta referência não pode ser removida pois embasa protocolos ou vacinas no sistema.");
+        }
     }
 }

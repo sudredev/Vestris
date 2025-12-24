@@ -9,7 +9,10 @@ servers:
 
 paths:
   /api/v1/referencias:
-    $ref: "./paths/referencias.yml"
+    $ref: './paths/referencias.yml#/referencias_colecao'
+
+  /api/v1/referencias/{id}:
+    $ref: './paths/referencias.yml#/referencias_item'
 
 components:
   schemas:

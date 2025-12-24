@@ -21,42 +21,37 @@ import java.util.stream.Collectors;
 public class ApiDelegateDoencas implements DoencasApiDelegate {
     private final ServiceDoenca servico;
 
+    // --- CRIAÇÃO ---
     @Override
     public ResponseEntity<ApiResponseDoenca> criarDoenca(DoencaRequest request) {
-        // 1. Converter DTO Entidade
         Doenca entidade = new Doenca();
         entidade.setNome(request.getNome());
         entidade.setNomeCientifico(request.getNomeCientifico());
         entidade.setSintomas(request.getSintomas());
-        // O Swagger gera UUID como UUID mesmo ou String, confira se precisa de UUID.fromString()
         entidade.setEspecieId(request.getEspecieId());
 
-        // 2. Serviço
         Doenca salva = servico.criar(entidade);
 
-        // 3. Converter Entidade DTO Response
-        DoencaResponse response = converterParaDTO(salva);
+        ApiResponseDoenca response = new ApiResponseDoenca();
+        response.setSucesso(true);
+        response.setMensagem("Doença cadastrada com sucesso.");
+        response.setDados(converterParaDTO(salva));
 
-        // 4. Wrapper
-        ApiResponseDoenca wrapper = new ApiResponseDoenca();
-        wrapper.setSucesso(true);
-        wrapper.setMensagem("Doença cadastrada com sucesso.");
-        wrapper.setDados(response);
-
-        return ResponseEntity.ok(wrapper);
+        return ResponseEntity.ok(response);
     }
 
+    // --- LISTAGEM ---
     @Override
     public ResponseEntity<ApiResponseListaDoenca> listarDoencas() {
         List<DoencaResponse> lista = servico.listarTodas().stream()
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());
 
-        ApiResponseListaDoenca wrapper = new ApiResponseListaDoenca();
-        wrapper.setSucesso(true);
-        wrapper.setDados(lista);
+        ApiResponseListaDoenca response = new ApiResponseListaDoenca();
+        response.setSucesso(true);
+        response.setDados(lista);
 
-        return ResponseEntity.ok(wrapper);
+        return ResponseEntity.ok(response);
     }
 
     @Override
@@ -65,14 +60,52 @@ public class ApiDelegateDoencas implements DoencasApiDelegate {
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());
 
-        ApiResponseListaDoenca wrapper = new ApiResponseListaDoenca();
-        wrapper.setSucesso(true);
-        wrapper.setDados(lista);
+        ApiResponseListaDoenca response = new ApiResponseListaDoenca();
+        response.setSucesso(true);
+        response.setDados(lista);
 
-        return ResponseEntity.ok(wrapper);
+        return ResponseEntity.ok(response);
     }
 
-    // Conversor Auxiliar
+    // --- NOVOS MÉTODOS (ID, PUT, DELETE) ---
+
+    @Override
+    public ResponseEntity<ApiResponseDoenca> buscarDoencaPorId(UUID id) {
+        Doenca encontrada = servico.buscarPorId(id);
+
+        ApiResponseDoenca response = new ApiResponseDoenca();
+        response.setSucesso(true);
+        response.setDados(converterParaDTO(encontrada));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseDoenca> atualizarDoenca(UUID id, DoencaRequest request) {
+        Doenca dadosParaAtualizar = new Doenca();
+        dadosParaAtualizar.setNome(request.getNome());
+        dadosParaAtualizar.setNomeCientifico(request.getNomeCientifico());
+        dadosParaAtualizar.setSintomas(request.getSintomas());
+        // Nota: Geralmente não atualizamos o especieId no PUT para não quebrar integridade,
+        // mas se o serviço permitir, adicione: dadosParaAtualizar.setEspecieId(request.getEspecieId());
+
+        Doenca atualizada = servico.atualizar(id, dadosParaAtualizar);
+
+        ApiResponseDoenca response = new ApiResponseDoenca();
+        response.setSucesso(true);
+        response.setMensagem("Doença atualizada com sucesso.");
+        response.setDados(converterParaDTO(atualizada));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarDoenca(UUID id) {
+        servico.deletar(id);
+        return ResponseEntity.noContent().build(); // Retorna 204
+    }
+
+    // --- CONVERSOR ---
     private DoencaResponse converterParaDTO(Doenca entidade) {
         DoencaResponse dto = new DoencaResponse();
         dto.setId(entidade.getId());

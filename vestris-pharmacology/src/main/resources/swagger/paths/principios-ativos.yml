@@ -1,30 +1,80 @@
-post:
-  tags:
-    - PrincipiosAtivos
-  summary: Cadastrar princípio ativo
-  operationId: criarPrincipioAtivo
-  requestBody:
-    content:
-      application/json:
-        schema:
-          $ref: '../components/schemas.yml#/PrincipioAtivoRequest'
-  responses:
-    '200':
-      description: Sucesso
+# Rota: /api/v1/principios-ativos
+principios_colecao:
+  post:
+    tags:
+      - PrincipiosAtivos
+    summary: Cadastrar princípio ativo
+    operationId: criarPrincipioAtivo
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponsePrincipioAtivo'
+            $ref: '../components/schemas.yml#/PrincipioAtivoRequest'
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponsePrincipioAtivo'
 
-get:
-  tags:
-    - PrincipiosAtivos
-  summary: Listar todos
-  operationId: listarPrincipiosAtivos
-  responses:
-    '200':
-      description: Lista
+  get:
+    tags:
+      - PrincipiosAtivos
+    summary: Listar todos
+    operationId: listarPrincipiosAtivos
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseListaPrincipioAtivo'
+
+# Rota: /api/v1/principios-ativos/{id}
+principios_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - PrincipiosAtivos
+    summary: Buscar por ID
+    operationId: buscarPrincipioAtivoPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponsePrincipioAtivo'
+  put:
+    tags:
+      - PrincipiosAtivos
+    summary: Atualizar
+    operationId: atualizarPrincipioAtivo
+    requestBody:
       content:
         application/json:
           schema:
-            $ref: '../components/schemas.yml#/ApiResponseListaPrincipioAtivo'
+            $ref: '../components/schemas.yml#/PrincipioAtivoRequest'
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponsePrincipioAtivo'
+  delete:
+    tags:
+      - PrincipiosAtivos
+    summary: Remover
+    description: "Não permite se houver medicamentos vinculados"
+    operationId: deletarPrincipioAtivo
+    responses:
+      '204':
+        description: Removido

@@ -1,0 +1,135 @@
+# --- ENUM COMPARTILHADO (Para o Java gerar corretamente) ---
+SexoEnum:
+  type: string
+  enum: [MACHO, FEMEA, INDEFINIDO]
+
+# --- PACIENTE ---
+PacienteRequest:
+  type: object
+  required: [veterinarioId, especieId, nome, dadosTutor]
+  properties:
+    veterinarioId:
+      type: string
+      format: uuid
+      description: "ID do Veterinário dono do paciente"
+    especieId:
+      type: string
+      format: uuid
+    nome:
+      type: string
+      example: "Loro"
+    dadosTutor:
+      type: string
+      description: "Texto livre: Nome, Tel, CPF, Endereço..."
+      example: "Maria Silva - (11) 9999-9999 - CPF 123..."
+    identificacaoAnimal:
+      type: string
+      description: "Anilha, marcação..."
+    # CAMPOS ADICIONADOS:
+    microchip:
+      type: string
+    pelagemCor:
+      type: string
+    # CORREÇÃO DO ENUM:
+    sexo:
+      $ref: '#/SexoEnum'
+    dataNascimento:
+      type: string
+      format: date
+    pesoAtualGramas:
+      type: integer
+      example: 350
+
+PacienteResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    nome: { type: string }
+    especieId: { type: string, format: uuid }
+    dadosTutor: { type: string }
+    identificacaoAnimal: { type: string }
+    pesoAtualGramas: { type: integer }
+    criadoEm: { type: string, format: date-time }
+    # CAMPOS ADICIONADOS QUE FALTAVAM:
+    veterinarioId:
+      type: string
+      format: uuid
+    dataNascimento:
+      type: string
+      format: date
+    microchip:
+      type: string
+    pelagemCor:
+      type: string
+    # CORREÇÃO DO ENUM NO RESPONSE:
+    sexo:
+      $ref: '#/SexoEnum'
+
+# ... Mantenha os outros schemas (Atendimento, Wrappers) iguais ...
+# --- ATENDIMENTO ---
+AtendimentoRequest:
+  type: object
+  required: [pacienteId, veterinarioId, queixaPrincipal]
+  properties:
+    pacienteId:
+      type: string
+      format: uuid
+    veterinarioId:
+      type: string
+      format: uuid
+    protocoloId:
+      type: string
+      format: uuid
+      description: "Opcional: ID de um protocolo usado como base"
+    queixaPrincipal:
+      type: string
+      description: "Motivo da consulta"
+    historicoClinico:
+      type: string
+      description: "Anamnese"
+    exameFisico:
+      type: string
+    diagnostico:
+      type: string
+      description: "Definitivo ou Presuntivo"
+    condutaClinica:
+      type: string
+      description: "Tratamento, Receita, Procedimentos"
+    observacoes:
+      type: string
+
+AtendimentoResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    dataHora: { type: string, format: date-time }
+    queixaPrincipal: { type: string }
+    historicoClinico: { type: string }
+    exameFisico: { type: string }
+    diagnostico: { type: string }
+    condutaClinica: { type: string }
+    protocoloId: { type: string, format: uuid }
+    veterinarioNome: { type: string, description: "Nome do Vet para o PDF" }
+    veterinarioCrmv: { type: string, description: "CRMV do Vet para o PDF" }
+
+# WRAPPERS
+ApiResponsePaciente:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/PacienteResponse' }
+ApiResponseListaPaciente:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { type: array, items: { $ref: '#/PacienteResponse' } }
+ApiResponseAtendimento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/AtendimentoResponse' }
+ApiResponseListaAtendimento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { type: array, items: { $ref: '#/AtendimentoResponse' } }

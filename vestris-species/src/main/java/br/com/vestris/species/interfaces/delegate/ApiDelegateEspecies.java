@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -62,6 +63,43 @@ public class ApiDelegateEspecies implements EspeciesApiDelegate {
         // Retorna o objeto wrapper (singular)
         return ResponseEntity.ok(wrapper);
     }
+
+    @Override
+    public ResponseEntity<ApiResponseEspecie> buscarEspeciePorId(UUID id) {
+        Especie encontrada = servico.buscarPorId(id); // Certifique-se que esse método existe no service
+
+        ApiResponseEspecie response = new ApiResponseEspecie();
+        response.setSucesso(true);
+        response.setDados(converterParaResponse(encontrada)); // Reutilize seu método converter
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseEspecie> atualizarEspecie(UUID id, EspecieRequest request) {
+        // Converte DTO -> Entidade
+        Especie dadosParaAtualizar = new Especie();
+        dadosParaAtualizar.setNomePopular(request.getNomePopular());
+        dadosParaAtualizar.setNomeCientifico(request.getNomeCientifico());
+        dadosParaAtualizar.setFamiliaTaxonomica(request.getFamiliaTaxonomica());
+        dadosParaAtualizar.setDescricao(request.getDescricao());
+
+        Especie atualizada = servico.atualizar(id, dadosParaAtualizar);
+
+        ApiResponseEspecie response = new ApiResponseEspecie();
+        response.setSucesso(true);
+        response.setDados(converterParaResponse(atualizada));
+
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarEspecie(UUID id) {
+        servico.deletar(id);
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+    }
+
+
 
     // Método auxiliar para conversão (poderia ser o MapStruct no futuro)
     private EspecieResponse converterParaResponse(Especie entidade) {

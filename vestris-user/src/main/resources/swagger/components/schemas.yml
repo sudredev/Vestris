@@ -63,3 +63,21 @@ ApiResponseToken:
   properties:
     sucesso: { type: boolean }
     dados: { $ref: '#/TokenResponse' }
+
+    # NOVO: DTO para atualização simples (sem senha/email)
+AtualizacaoUsuarioRequest:
+  type: object
+  properties:
+    nome:
+      type: string
+    crmv:
+      type: string
+
+    # NOVO: Wrapper de Lista
+ApiResponseListaUsuario:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/UsuarioResponse' }

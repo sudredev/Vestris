@@ -8,8 +8,22 @@ servers:
     description: Servidor Local
 
 paths:
+  # --- VACINAS ---
   /api/v1/vacinas:
-    $ref: "./paths/vacinas.yml"
+    $ref: './paths/vacinas.yml#/vacinas_colecao'
+
+  /api/v1/vacinas/{id}:
+    $ref: './paths/vacinas.yml#/vacinas_item'
+
+  # --- PROTOCOLOS VACINAIS ---
+  /api/v1/protocolos-vacinais:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_colecao'
+
+  /api/v1/protocolos-vacinais/{id}:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_item'
+
+  /api/v1/especies/{especieId}/protocolos-vacinais:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_por_especie'
 
 components:
   schemas:
@@ -20,4 +34,12 @@ components:
     ApiResponseVacina:
       $ref: "./components/schemas.yml#/ApiResponseVacina"
     ApiResponseListaVacina:
+      $ref: "./components/schemas.yml#/ApiResponseListaVacina"
+    ProtocoloVacinalRequest:
+      $ref: "./components/schemas.yml#/ProtocoloVacinalRequest"
+    ProtocoloVacinalResponse:
+      $ref: "./components/schemas.yml#/ProtocoloVacinalResponse"
+    ApiResponseProtocoloVacinal:
+      $ref: "./components/schemas.yml#/ApiResponseVacina"
+    ApiResponseListaProtocoloVacinal:
       $ref: "./components/schemas.yml#/ApiResponseListaVacina"

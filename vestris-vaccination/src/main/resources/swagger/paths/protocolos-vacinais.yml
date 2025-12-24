@@ -1,0 +1,88 @@
+# Rota: /api/v1/protocolos-vacinais
+protocolos_colecao:
+  post:
+    tags:
+      - ProtocolosVacinais
+    summary: Criar protocolo
+    operationId: criarProtocoloVacinal
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ProtocoloVacinalRequest'
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseProtocoloVacinal'
+
+# Rota: /api/v1/especies/{especieId}/protocolos-vacinais
+protocolos_por_especie:
+  get:
+    tags:
+      - ProtocolosVacinais
+    summary: Listar por espécie
+    operationId: listarProtocolosPorEspecie
+    parameters:
+      - name: especieId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseListaProtocoloVacinal'
+
+# Rota: /api/v1/protocolos-vacinais/{id}
+protocolos_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  get:
+    tags:
+      - ProtocolosVacinais
+    summary: Buscar protocolo por ID
+    operationId: buscarProtocoloVacinalPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseProtocoloVacinal'
+  put:
+    tags:
+      - ProtocolosVacinais
+    summary: Atualizar protocolo
+    operationId: atualizarProtocoloVacinal
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas.yml#/ProtocoloVacinalRequest'
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/ApiResponseProtocoloVacinal'
+  delete:
+    tags:
+      - ProtocolosVacinais
+    summary: Remover protocolo
+    operationId: deletarProtocoloVacinal
+    responses:
+      '204':
+        description: Removido

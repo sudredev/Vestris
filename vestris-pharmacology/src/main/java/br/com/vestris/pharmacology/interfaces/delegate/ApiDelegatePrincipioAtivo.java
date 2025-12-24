@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -48,6 +49,39 @@ public class ApiDelegatePrincipioAtivo implements PrincipiosAtivosApiDelegate {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    public ResponseEntity<ApiResponsePrincipioAtivo> buscarPrincipioAtivoPorId(UUID id) {
+        PrincipioAtivo pa = servico.buscarPrincipioPorId(id);
+
+        ApiResponsePrincipioAtivo response = new ApiResponsePrincipioAtivo();
+        response.setSucesso(true);
+        response.setDados(converter(pa));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponsePrincipioAtivo> atualizarPrincipioAtivo(UUID id, PrincipioAtivoRequest request) {
+        PrincipioAtivo dados = new PrincipioAtivo();
+        dados.setNome(request.getNome());
+        dados.setDescricao(request.getDescricao());
+        dados.setGrupoFarmacologico(request.getGrupoFarmacologico());
+
+        PrincipioAtivo atualizado = servico.atualizarPrincipio(id, dados);
+
+        ApiResponsePrincipioAtivo response = new ApiResponsePrincipioAtivo();
+        response.setSucesso(true);
+        response.setMensagem("Atualizado com sucesso.");
+        response.setDados(converter(atualizado));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarPrincipioAtivo(UUID id) {
+        servico.deletarPrincipio(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ... converter ...
     private PrincipioAtivoResponse converter(PrincipioAtivo pa) {
         PrincipioAtivoResponse dto = new PrincipioAtivoResponse();
         dto.setId(pa.getId());
@@ -56,4 +90,6 @@ public class ApiDelegatePrincipioAtivo implements PrincipiosAtivosApiDelegate {
         dto.setGrupoFarmacologico(pa.getGrupoFarmacologico());
         return dto;
     }
+
+
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -50,6 +51,40 @@ public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    public ResponseEntity<ApiResponseMedicamento> buscarMedicamentoPorId(UUID id) {
+        Medicamento med = servico.buscarMedicamentoPorId(id);
+
+        ApiResponseMedicamento response = new ApiResponseMedicamento();
+        response.setSucesso(true);
+        response.setDados(converter(med));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseMedicamento> atualizarMedicamento(UUID id, MedicamentoRequest request) {
+        Medicamento dados = new Medicamento();
+        dados.setNome(request.getNome());
+        dados.setConcentracao(request.getConcentracao());
+        dados.setFabricante(request.getFabricante());
+        dados.setFormaFarmaceutica(request.getFormaFarmaceutica());
+
+        Medicamento atualizado = servico.atualizarMedicamento(id, dados, request.getPrincipioAtivoId());
+
+        ApiResponseMedicamento response = new ApiResponseMedicamento();
+        response.setSucesso(true);
+        response.setMensagem("Medicamento atualizado.");
+        response.setDados(converter(atualizado));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Void> deletarMedicamento(UUID id) {
+        servico.deletarMedicamento(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ... converter ...
     private MedicamentoResponse converter(Medicamento med) {
         MedicamentoResponse dto = new MedicamentoResponse();
         dto.setId(med.getId());
@@ -57,7 +92,6 @@ public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
         dto.setConcentracao(med.getConcentracao());
         dto.setFabricante(med.getFabricante());
         dto.setFormaFarmaceutica(med.getFormaFarmaceutica());
-        // Devolvemos o ID do principio ativo vinculado
         dto.setPrincipioAtivoId(med.getPrincipioAtivo().getId());
         return dto;
     }

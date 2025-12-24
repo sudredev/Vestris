@@ -1,0 +1,64 @@
+#Rota: /api/v1/atendimentos
+atendimentos_item:
+  post:
+    tags: [ Atendimentos ]
+    summary: Registrar novo atendimento
+    operationId: criarAtendimento
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/AtendimentoRequest' }
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
+
+# Rota: /api/v1/pacientes/{pacienteId}/atendimentos
+atendimentos_por_paciente:
+  get:
+    tags: [ Atendimentos ]
+    summary: Histórico clínico do paciente
+    operationId: listarAtendimentosPorPaciente
+    parameters:
+      - name: pacienteId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Histórico
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAtendimento' }
+
+#Rota: /api/v1/atendimentos/{id}
+atendimentos_por_id:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  get:
+    tags: [ Atendimentos ]
+    summary: Ver detalhes do atendimento
+    operationId: buscarAtendimentoPorId
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
+  put:
+    tags: [ Atendimentos ]
+    summary: Retificar atendimento
+    operationId: atualizarAtendimento
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/AtendimentoRequest' }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
