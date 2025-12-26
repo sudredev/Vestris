@@ -59,4 +59,10 @@ public class ServiceReferencia {
             throw new ExcecaoRegraNegocio("Esta referência não pode ser removida pois embasa protocolos ou vacinas no sistema.");
         }
     }
+
+    public String buscarCitacaoPorId(UUID id) {
+        return repositorio.findById(id)
+                .map(r -> r.getAutores() + " (" + r.getAno() + ") - " + r.getTitulo())
+                .orElse("Referência não identificada");
+    }
 }

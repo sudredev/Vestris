@@ -26,6 +26,12 @@ paths:
   /api/v1/doencas/{doencaId}/protocolos:
     $ref: './paths/protocolos.yml#/paths/~1api~1v1~1doencas~1{doencaId}~1protocolos'
 
+  /api/v1/especies/{especieId}/doencas/{doencaId}/protocolo-completo:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1especies~1{especieId}~1doencas~1{doencaId}~1protocolo-completo'
+
+  /api/v1/calculadora/dosagem:
+    $ref: './paths/calculadora.yml#/calculadora_item'
+
 
     # Importando os componentes (necessário declarar aqui também para o parser raiz entender)
 components:
@@ -46,9 +52,24 @@ components:
       $ref: "./components/schemas.yml#/ProtocoloRequest"
     ProtocoloResponse:
       $ref: "./components/schemas.yml#/ProtocoloResponse"
+    CalculoSeguroRequest:
+      $ref: "./components/schemas.yml#/CalculoSeguroRequest"
+    CalculoResponse:
+      $ref: "./components/schemas.yml#/CalculoResponse"
     ApiResponseProtocolo:
       $ref: "./components/schemas.yml#/ApiResponseProtocolo"
     ApiResponseListaProtocolo:
       $ref: "./components/schemas.yml#/ApiResponseListaProtocolo"
+    ProtocoloDetalhadoResponse:
+      $ref: "./components/schemas.yml#/ProtocoloDetalhadoResponse"
+    ProtocoloCompletoResponse:
+      $ref: "./components/schemas.yml#/ProtocoloCompletoResponse"
+    ApiResponseProtocoloCompleto:
+      $ref: "./components/schemas.yml#/ApiResponseProtocoloCompleto"
+    ApiResponseCalculo:
+      $ref: "./components/schemas.yml#/ApiResponseCalculo"
+
+
+
 
 

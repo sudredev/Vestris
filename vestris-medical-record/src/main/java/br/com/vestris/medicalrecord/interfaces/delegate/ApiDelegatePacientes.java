@@ -52,13 +52,16 @@ public class ApiDelegatePacientes implements PacientesApiDelegate {
 
     @Override
     public ResponseEntity<ApiResponseListaPaciente> listarPacientes(UUID veterinarioId) {
+        // O serviço já valida se o vet existe. Se não existir, lança exceção tratada.
         List<PacienteResponse> lista = servico.listarPorVeterinario(veterinarioId).stream()
                 .map(this::converter)
                 .collect(Collectors.toList());
 
         ApiResponseListaPaciente response = new ApiResponseListaPaciente();
         response.setSucesso(true);
+        // Se a lista estiver vazia, o JSON será { "sucesso": true, "dados": [] } -> PERFEITO
         response.setDados(lista);
+
         return ResponseEntity.ok(response);
     }
 

@@ -84,3 +84,25 @@ paths:
             application/json:
               schema:
                 $ref: '../components/schemas.yml#/ApiResponseListaProtocolo'
+
+  /api/v1/especies/{especieId}/doencas/{doencaId}/protocolo-completo:
+    get:
+      tags: [ Protocolos ]
+      summary: Obter visão completa do tratamento
+      description: "Retorna doença, protocolo, dosagens e contraindicações combinadas"
+      operationId: obterProtocoloCompleto
+      parameters:
+        - name: especieId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: doencaId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema: { $ref: '../components/schemas.yml#/ApiResponseProtocoloCompleto' }

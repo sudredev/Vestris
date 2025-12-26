@@ -35,6 +35,13 @@ public class ServicePaciente {
     }
 
     public List<Paciente> listarPorVeterinario(UUID veterinarioId) {
+        // 1. Validação: O Veterinário existe?
+        if (!servicoUsuario.existePorId(veterinarioId)) {
+            // Isso vai gerar um 404 (Not Found) tratado, e não um 500
+            throw new ExceptionRecursoNaoEncontrado("Veterinário", veterinarioId.toString());
+        }
+
+        // 2. Busca (O JPA retorna lista vazia [] automaticamente se não achar nada, não null)
         return repositorio.findByVeterinarioId(veterinarioId);
     }
 

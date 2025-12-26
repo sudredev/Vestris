@@ -119,7 +119,79 @@ ProtocoloResponse:
       items:
         $ref: '#/DosagemResponse'
 
-    # --- WRAPPERS ---
+# [MELHORIA] Objeto auxiliar para não gerar classe interna anônima no Java
+ProtocoloDetalhadoResponse:
+  type: object
+  properties:
+    titulo: { type: string }
+    referencia: { type: string }
+    observacoes: { type: string }
+    dosagens:
+      type: array
+      items: { $ref: '#/DosagemResponse' }
+    alertasGerais:
+      type: array
+      items: { type: string }
+
+ProtocoloCompletoResponse:
+  type: object
+  properties:
+    doenca: { $ref: '#/DoencaResponse' }
+    protocolos:
+      type: array
+      items:
+        $ref: '#/ProtocoloDetalhadoResponse'
+
+
+CalculoSeguroRequest:
+  type: object
+  required: [protocoloId, medicamentoId, peso, unidadePeso]
+  properties:
+    protocoloId:
+      type: string
+      format: uuid
+      description: "Obrigatório: O cálculo deve vir de um protocolo existente."
+    medicamentoId:
+      type: string
+      format: uuid
+      description: "O medicamento dentro do protocolo."
+    peso:
+      type: number
+      format: double
+      example: 0.450
+    unidadePeso:
+      type: string
+      enum: [KG, G]
+      example: "KG"
+
+CalculoResponse:
+  type: object
+  properties:
+    protocoloTitulo: { type: string }
+    medicamentoNome: { type: string }
+    referenciaBibliografica: { type: string }
+    pesoConsideradoKg: { type: number, format: double }
+
+    # Resultados em MG (Massa)
+    doseMinimaMg: { type: number, format: double }
+    doseMaximaMg: { type: number, format: double }
+
+    # Resultados em ML (Volume - Se houver concentração)
+    volumeMinimoMl: { type: number, format: double }
+    volumeMaximoMl: { type: number, format: double }
+
+    # Instruções
+    concentracaoUtilizada: { type: string }
+    frequencia: { type: string }
+    via: { type: string }
+    duracao: { type: string }
+
+    # Segurança
+    alertas:
+      type: array
+      items: { type: string }
+
+# --- WRAPPERS ---
 ApiResponseProtocolo:
   type: object
   properties:
@@ -135,6 +207,12 @@ ApiResponseListaProtocolo:
     dados:
       type: array
       items: { $ref: '#/ProtocoloResponse' }
+
+ApiResponseProtocoloCompleto:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/ProtocoloCompletoResponse' }
 
 ApiResponseDoenca:
   type: object
@@ -155,3 +233,9 @@ ApiResponseListaDoenca:
       type: array
       items:
         $ref: '#/DoencaResponse'
+
+ApiResponseCalculo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/CalculoResponse' }

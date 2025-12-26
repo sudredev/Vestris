@@ -115,4 +115,8 @@ public class ServiceFarmacologia {
     public boolean existeMedicamentoPorId(UUID id) {
         return repoMedicamento.existsById(id);
     }
+
+    public Medicamento buscarEntidadePorId(UUID id) {
+        return buscarMedicamentoPorId(id); // Reusa o método que já lança exceção se não achar
+    }
 }

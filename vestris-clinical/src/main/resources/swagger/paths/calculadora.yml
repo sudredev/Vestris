@@ -1,0 +1,17 @@
+#ROTA: /api/v1/calculadora/dosagem
+calculadora_item:
+  post:
+    tags: [Calculadora]
+    summary: Calcular dose baseada em protocolo
+    description: "Executa o cálculo matemático respeitando as faixas do protocolo e a concentração do medicamento."
+    operationId: calcularDosagemSegura
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/CalculoSeguroRequest' }
+    responses:
+      '200':
+        description: Cálculo realizado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseCalculo' }
