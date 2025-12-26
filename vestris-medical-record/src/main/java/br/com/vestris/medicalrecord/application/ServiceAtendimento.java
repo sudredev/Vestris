@@ -20,10 +20,8 @@ public class ServiceAtendimento {
     private final ServiceUsuario servicoUsuario;
 
     public Atendimento criar(Atendimento novo, UUID pacienteId) {
-        // 1. Validar Paciente
         Paciente paciente = servicoPaciente.buscarPorId(pacienteId);
 
-        // 2. Validar Veterinário (Quem está atendendo)
         if (!servicoUsuario.existePorId(novo.getVeterinarioId())) {
             throw new ExcecaoRegraNegocio("Veterinário responsável não encontrado.");
         }
@@ -44,16 +42,21 @@ public class ServiceAtendimento {
                 .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Atendimento", id.toString()));
     }
 
+    // --- AQUI ESTAVA O PROVÁVEL ERRO ---
     public Atendimento atualizar(UUID id, Atendimento dados) {
         Atendimento existente = buscarPorId(id);
 
-        // Atualiza os dados clínicos (Retificação)
+        // Atualiza TODOS os campos textuais
         existente.setQueixaPrincipal(dados.getQueixaPrincipal());
+
+        // CONFIRA SE ESTAS LINHAS ESTÃO LÁ:
         existente.setHistoricoClinico(dados.getHistoricoClinico());
         existente.setExameFisico(dados.getExameFisico());
         existente.setDiagnostico(dados.getDiagnostico());
         existente.setCondutaClinica(dados.getCondutaClinica());
         existente.setObservacoes(dados.getObservacoes());
+
+        // Atualiza Protocolo (se mudou)
         existente.setProtocoloId(dados.getProtocoloId());
 
         return repositorio.save(existente);

@@ -65,6 +65,7 @@ public class ApiDelegateUsuarios implements GestaoUsuariosApiDelegate {
         dto.setEmail(u.getEmail());
         // Ajuste o Enum conforme gerado
         dto.setPerfil(UsuarioResponse.PerfilEnum.valueOf(u.getPerfil().name()));
+        dto.setCrmv(u.getCrmv());
         return dto;
     }
 }

@@ -39,6 +39,7 @@ UsuarioResponse:
     perfil:
       type: string
       enum: [ADMIN, VETERINARIO, ESTUDANTE]
+    crmv: { type: string }
 
 TokenResponse:
   type: object
