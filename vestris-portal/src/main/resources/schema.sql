@@ -7,7 +7,7 @@ CREATE SCHEMA IF NOT EXISTS reference_schema;
 CREATE SCHEMA IF NOT EXISTS medical_record_schema;
 CREATE SCHEMA IF NOT EXISTS feedback_schema;
 CREATE SCHEMA IF NOT EXISTS saas_schema;
-CREATE SCHEMA IF NOT EXISTS users_schema; -- Garante que existe
+CREATE SCHEMA IF NOT EXISTS users_schema;
 
 
 -- =============================================================================
