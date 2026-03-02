@@ -22,10 +22,27 @@ public class ApiDelegateContraindicacoes implements ContraindicacoesApiDelegate 
     public ResponseEntity<ApiResponseContraindicacao> criarContraindicacao(ContraindicacaoRequest request) {
         Contraindicacao.Gravidade gravidade = Contraindicacao.Gravidade.valueOf(request.getGravidade().name());
 
+        // Captura a referência ou define um padrão caso venha nulo
+        String referencia = request.getReferenciaTexto() != null ? request.getReferenciaTexto() : "Referência interna";
+
+        // Chama o serviço passando tanto Medicamento quanto Princípio.
+        // O Serviço deve ter a assinatura: criar(UUID medId, UUID principioId, UUID espId, String ref, Gravidade g, String desc)
+        // Nota: request.getPrincipioAtivoId() só funcionará se você adicionou este campo no YAML do Swagger.
+        // Se ainda não adicionou, o Java não encontrará o método getter.
+
+        UUID principioId = null;
+        // Tenta obter o ID do princípio se o DTO gerado tiver o método (depende da sua atualização no YAML)
+        try {
+            // principioId = request.getPrincipioAtivoId(); // Descomente se o método existir
+        } catch (Exception e) {
+            // Ignora se não existir no DTO ainda
+        }
+
         Contraindicacao salvo = servico.criar(
-                request.getMedicamentoId(),
+                request.getMedicamentoId().get(), // Pode ser null se vier pelo admin de principios
+                principioId,                // Novo campo (prioritário)
                 request.getEspecieId(),
-                request.getReferenciaId(),
+                referencia,
                 gravidade,
                 request.getDescricao()
         );
@@ -50,17 +67,6 @@ public class ApiDelegateContraindicacoes implements ContraindicacoesApiDelegate 
         return ResponseEntity.ok(response);
     }
 
-    private ContraindicacaoResponse converter(Contraindicacao c) {
-        ContraindicacaoResponse dto = new ContraindicacaoResponse();
-        dto.setId(c.getId());
-        dto.setMedicamentoId(c.getMedicamento().getId());
-        dto.setEspecieId(c.getEspecieId());
-        dto.setReferenciaId(c.getReferenciaId());
-        dto.setDescricao(c.getDescricao());
-        dto.setGravidade(GravidadeEnum.valueOf(c.getGravidade().name()));
-        return dto;
-    }
-
     @Override
     public ResponseEntity<ApiResponseContraindicacao> buscarContraindicacaoPorId(UUID id) {
         Contraindicacao encontrada = servico.buscarPorId(id);
@@ -73,17 +79,15 @@ public class ApiDelegateContraindicacoes implements ContraindicacoesApiDelegate 
 
     @Override
     public ResponseEntity<ApiResponseContraindicacao> atualizarContraindicacao(UUID id, ContraindicacaoRequest request) {
-        // Converte o Enum do DTO para o Enum do Domínio
         Contraindicacao.Gravidade gravidadeDominio = Contraindicacao.Gravidade.valueOf(request.getGravidade().name());
 
-        // Chama o serviço (Note que mantemos o Medicamento original, geralmente não se muda o medicamento da contraindicação, se cria outra)
-        // Mas se quiser permitir mudar medicamento, precisaria de mais validação no serviço.
-        // Aqui assumo que atualizamos Especie, Referencia, Gravidade e Descrição.
+        String referencia = request.getReferenciaTexto() != null ? request.getReferenciaTexto() : "Referência não informada";
 
+        // O método atualizar no serviço precisa aceitar a referência String agora
         Contraindicacao atualizada = servico.atualizar(
                 id,
                 request.getEspecieId(),
-                request.getReferenciaId(),
+                referencia,
                 gravidadeDominio,
                 request.getDescricao()
         );
@@ -99,5 +103,29 @@ public class ApiDelegateContraindicacoes implements ContraindicacoesApiDelegate 
     public ResponseEntity<Void> deletarContraindicacao(UUID id) {
         servico.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // --- CONVERSOR ---
+    private ContraindicacaoResponse converter(Contraindicacao c) {
+        ContraindicacaoResponse dto = new ContraindicacaoResponse();
+        dto.setId(c.getId());
+
+        // IMPORTANTE: O Frontend espera um ID no campo "medicamentoId" para links.
+        // Como a contraindicação agora é baseada em princípio ativo, retornamos o ID do princípio
+        // neste campo para manter a compatibilidade visual, ou null se preferir.
+        if (c.getPrincipioAtivo() != null) {
+            dto.setMedicamentoId(c.getPrincipioAtivo().getId());
+        }
+
+        dto.setEspecieId(c.getEspecieId());
+
+        // Se você atualizou o response DTO para ter referenciaTexto, use:
+        // dto.setReferenciaTexto(c.getReferenciaTexto());
+        // Caso contrário, mantemos referenciaId como null pois mudamos para texto
+        dto.setReferenciaId(null);
+
+        dto.setDescricao(c.getDescricao());
+        dto.setGravidade(GravidadeEnum.valueOf(c.getGravidade().name()));
+        return dto;
     }
 }

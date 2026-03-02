@@ -1,0 +1,94 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Clínico
+  description: Gestão de Doenças e Protocolos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/doencas:
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas'
+
+  /api/v1/doencas/{id}:
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas~1{id}'
+
+  /api/v1/doencas/por-especie/{especieId}:
+    $ref: './paths/doencas.yml#/paths/~1api~1v1~1doencas~1por-especie~1{especieId}'
+
+  /api/v1/protocolos:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1protocolos'
+
+  /api/v1/protocolos/{id}:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1protocolos~1{id}'
+
+  /api/v1/doencas/{doencaId}/protocolos:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1doencas~1{doencaId}~1protocolos'
+
+  /api/v1/especies/{especieId}/doencas/{doencaId}/protocolo-completo:
+    $ref: './paths/protocolos.yml#/paths/~1api~1v1~1especies~1{especieId}~1doencas~1{doencaId}~1protocolo-completo'
+
+  /api/v1/calculadora/dosagem:
+    $ref: './paths/calculadora.yml#/calculadora_item'
+    # ADICIONE ESTA LINHA:
+  /api/v1/calculadora/validar:
+    $ref: './paths/calculadora.yml#/calculadora_validar'
+
+  /api/v1/calculadora/livre:
+    $ref: './paths/calculadora.yml#/calculadora_livre'
+
+
+# Importando os componentes (necessário declarar aqui também para o parser raiz entender)
+components:
+  schemas:
+    DoencaRequest:
+      $ref: "./components/schemas.yml#/DoencaRequest"
+    DoencaResponse:
+      $ref: "./components/schemas.yml#/DoencaResponse"
+    ApiResponseDoenca:
+      $ref: "./components/schemas.yml#/ApiResponseDoenca"
+    ApiResponseListaDoenca:
+      $ref: "./components/schemas.yml#/ApiResponseListaDoenca"
+    DosagemItemRequest:
+      $ref: "./components/schemas.yml#/DosagemItemRequest"
+    DosagemResponse:
+      $ref: "./components/schemas.yml#/DosagemResponse"
+    ProtocoloRequest:
+      $ref: "./components/schemas.yml#/ProtocoloRequest"
+    ProtocoloResponse:
+      $ref: "./components/schemas.yml#/ProtocoloResponse"
+    CalculoSeguroRequest:
+      $ref: "./components/schemas.yml#/CalculoSeguroRequest"
+    CalculoResponse:
+      $ref: "./components/schemas.yml#/CalculoResponse"
+    ApiResponseProtocolo:
+      $ref: "./components/schemas.yml#/ApiResponseProtocolo"
+    ApiResponseListaProtocolo:
+      $ref: "./components/schemas.yml#/ApiResponseListaProtocolo"
+    ProtocoloDetalhadoResponse:
+      $ref: "./components/schemas.yml#/ProtocoloDetalhadoResponse"
+    ProtocoloCompletoResponse:
+      $ref: "./components/schemas.yml#/ProtocoloCompletoResponse"
+    ApiResponseProtocoloCompleto:
+      $ref: "./components/schemas.yml#/ApiResponseProtocoloCompleto"
+    ApiResponseCalculo:
+      $ref: "./components/schemas.yml#/ApiResponseCalculo"
+    # ENUMS ATUALIZADOS PARA O GERADOR ENCONTRAR
+    OrigemProtocoloEnum:
+      $ref: "./components/schemas.yml#/OrigemProtocoloEnum"
+    CalculoValidacaoRequest:
+      $ref: "./components/schemas.yml#/CalculoValidacaoRequest"
+
+
+
+
+
+```
+

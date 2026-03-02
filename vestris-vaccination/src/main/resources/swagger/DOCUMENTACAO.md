@@ -1,0 +1,59 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Vacinação
+  description: Gestão de Imunobiológicos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  # --- VACINAS ---
+  /api/v1/vacinas:
+    $ref: './paths/vacinas.yml#/vacinas_colecao'
+
+  /api/v1/vacinas/{id}:
+    $ref: './paths/vacinas.yml#/vacinas_item'
+
+  # --- PROTOCOLOS VACINAIS ---
+  /api/v1/protocolos-vacinais:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_colecao'
+
+  /api/v1/protocolos-vacinais/{id}:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_item'
+
+  /api/v1/especies/{especieId}/protocolos-vacinais:
+    $ref: './paths/protocolos-vacinais.yml#/protocolos_por_especie'
+
+  /api/v1/pacientes/{pacienteId}/vacinas:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_paciente'
+  /api/v1/vacinas-aplicadas/{id}:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_item'
+
+components:
+  schemas:
+    VacinaRequest:
+      $ref: "./components/schemas.yml#/VacinaRequest"
+    VacinaResponse:
+      $ref: "./components/schemas.yml#/VacinaResponse"
+    ApiResponseVacina:
+      $ref: "./components/schemas.yml#/ApiResponseVacina"
+    ApiResponseListaVacina:
+      $ref: "./components/schemas.yml#/ApiResponseListaVacina"
+    ProtocoloVacinalRequest:
+      $ref: "./components/schemas.yml#/ProtocoloVacinalRequest"
+    ProtocoloVacinalResponse:
+      $ref: "./components/schemas.yml#/ProtocoloVacinalResponse"
+    ApiResponseProtocoloVacinal:
+      $ref: "./components/schemas.yml#/ApiResponseVacina"
+    ApiResponseListaProtocoloVacinal:
+      $ref: "./components/schemas.yml#/ApiResponseListaVacina"
+
+```
+

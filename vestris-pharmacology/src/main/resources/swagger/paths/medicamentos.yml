@@ -76,3 +76,28 @@ medicamentos_item:
     responses:
       '204':
         description: Removido
+
+# Rota para buscar vias disponíveis
+vias_por_medicamento:
+  get:
+    tags: [Medicamentos]
+    summary: Listar vias de administração disponíveis
+    description: "Retorna as vias cadastradas nas referências para este medicamento e espécie."
+    operationId: listarViasDoMedicamento
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+      - name: especieId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Lista de vias (Strings)
+        content:
+          application/json:
+            schema:
+              type: array
+              items: { type: string }

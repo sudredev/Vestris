@@ -66,5 +66,8 @@ public class ServiceUsuario {
         }
         repositorio.deleteById(id);
     }
-    
+
+    public List<Usuario> listarPorClinica(UUID clinicaId) {
+        return repositorio.findByClinicaId(clinicaId);
+    }
 }

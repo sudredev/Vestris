@@ -1,0 +1,44 @@
+# ROTA: /api/v1/saas/planos
+planos_colecao:
+  get:
+    tags: [Planos]
+    summary: Listar planos disponíveis
+    operationId: listarPlanos
+    responses:
+      '200':
+        description: Lista de planos
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaPlano' }
+
+  post:
+    tags: [Planos]
+    summary: Criar novo plano (Super Admin)
+    operationId: criarPlano
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/PlanoRequest' }
+    responses:
+      '201':
+        description: Plano criado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponsePlano' }
+
+# ROTA: /api/v1/saas/planos/{id}
+planos_item:
+  get:
+    tags: [Planos]
+    summary: Buscar plano por ID
+    operationId: buscarPlanoPorId
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponsePlano' }

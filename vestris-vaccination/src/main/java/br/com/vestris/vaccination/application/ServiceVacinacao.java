@@ -49,6 +49,15 @@ public class ServiceVacinacao {
         return repositorio.save(existente);
     }
 
+    public boolean existePorId(UUID id) {
+        return repositorio.existsById(id);
+    }
+
+    // Adicione também para buscar o nome (para o DTO)
+    public String buscarNomePorId(UUID id) {
+        return repositorio.findById(id).map(v -> v.getNome()).orElse("Vacina Desconhecida");
+    }
+
     public void deletar(UUID id) {
         if (!repositorio.existsById(id)) {
             throw new ExceptionRecursoNaoEncontrado("Vacina", id.toString());

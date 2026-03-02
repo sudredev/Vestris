@@ -1,0 +1,140 @@
+## src\main\resources\swagger\components
+
+### schemas.yml
+
+```yaml
+# src\main\resources\swagger\components\schemas.yml
+# --- ENUMS ---
+StatusAssinaturaEnum:
+  type: string
+  enum: [TRIAL, ATIVO, BLOQUEADO, INADIMPLENTE, CANCELADO]
+
+TipoFaturamentoEnum:
+  type: string
+  enum: [AUTO, MANUAL]
+
+# --- PLANO (CATÁLOGO) ---
+PlanoRequest:
+  type: object
+  required: [ nome, maxVeterinarios ]
+  properties:
+    nome:
+      type: string
+      example: "Clínica Pequena"
+    descricao:
+      type: string
+    precoMensal:
+      type: number
+      format: double
+      example: 249.00
+    precoAnual:
+      type: number
+      format: double
+      example: 2490.00
+    maxVeterinarios:
+      type: integer
+      example: 3
+    isCustom:
+      type: boolean
+      default: false
+    featuresJson:
+      type: string
+      description: "JSON contendo flags (ex: branding, api, export)"
+
+PlanoResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    nome: { type: string }
+    descricao: { type: string }
+    precoMensal: { type: number, format: double }
+    precoAnual: { type: number, format: double }
+    maxVeterinarios: { type: integer }
+    isCustom: { type: boolean }
+    featuresJson: { type: string }
+
+# --- ASSINATURA (CONTRATO) ---
+AssinaturaResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    clinicaId: { type: string, format: uuid }
+    plano: { $ref: '#/PlanoResponse' }
+    status: { $ref: '#/StatusAssinaturaEnum' }
+    tipoFaturamento: { $ref: '#/TipoFaturamentoEnum' }
+    dataInicio: { type: string, format: date-time }
+    dataFim: { type: string, format: date-time }
+    dataTrialFim: { type: string, format: date-time }
+
+# Request para iniciar/trocar plano
+AssinarPlanoRequest:
+  type: object
+  required: [ planoId, ciclo ]
+  properties:
+    planoId:
+      type: string
+      format: uuid
+    ciclo:
+      type: string
+      enum: [MENSAL, ANUAL]
+
+CadastroSaasRequest:
+  type: object
+  required: [ nomeUsuario, email, senha, crmv, nomeClinica, planoId ]
+  properties:
+    nomeUsuario:
+      type: string
+    email:
+      type: string
+      format: email
+    senha:
+      type: string
+    crmv:
+      type: string
+    nomeClinica:
+      type: string
+    planoId:
+      type: string
+      format: uuid
+
+TokenResponse:
+  type: object
+  properties:
+    token:
+      type: string
+    tipo:
+      type: string
+      example: "Bearer"
+    expiraEm:
+      type: string
+
+
+ApiResponseToken:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem: { type: string }
+    dados: { $ref: '#/TokenResponse' }
+
+# --- WRAPPERS ---
+ApiResponsePlano:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/PlanoResponse' }
+
+ApiResponseListaPlano:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/PlanoResponse' }
+
+ApiResponseAssinatura:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/AssinaturaResponse' }
+```
+

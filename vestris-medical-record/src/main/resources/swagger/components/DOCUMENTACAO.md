@@ -1,0 +1,179 @@
+## src\main\resources\swagger\components
+
+### schemas.yml
+
+```yaml
+# src\main\resources\swagger\components\schemas.yml
+# --- ENUM COMPARTILHADO ---
+SexoEnum:
+  type: string
+  enum: [MACHO, FEMEA, INDEFINIDO]
+
+StatusAtendimentoEnum:
+  type: string
+  enum: [AGENDADO, EM_ANDAMENTO, REALIZADO, CANCELADO]
+
+# --- PACIENTE ---
+PacienteRequest:
+  type: object
+  required: [veterinarioId, especieId, nome, dadosTutor]
+  properties:
+    veterinarioId: { type: string, format: uuid }
+    especieId: { type: string, format: uuid }
+    nome: { type: string }
+    dadosTutor: { type: string }
+    identificacaoAnimal: { type: string }
+    microchip: { type: string }
+    pelagemCor: { type: string }
+    sexo: { $ref: '#/SexoEnum' }
+    dataNascimento: { type: string, format: date }
+    pesoAtualGramas: { type: integer }
+
+PacienteResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    nome: { type: string }
+    especieId: { type: string, format: uuid }
+    dadosTutor: { type: string }
+    identificacaoAnimal: { type: string }
+    pesoAtualGramas: { type: integer }
+    criadoEm: { type: string, format: date-time }
+    veterinarioId: { type: string, format: uuid }
+    dataNascimento: { type: string, format: date }
+    microchip: { type: string }
+    pelagemCor: { type: string }
+    sexo: { $ref: '#/SexoEnum' }
+
+# --- DTO DE AGENDAMENTO (Criação Leve) ---
+AgendamentoRequest:
+  type: object
+  required: [pacienteId, veterinarioId, titulo, dataHora]
+  properties:
+    pacienteId: { type: string, format: uuid }
+    veterinarioId: { type: string, format: uuid }
+    titulo: { type: string, example: "Consulta de Rotina" }
+    dataHora: { type: string, format: date-time }
+    protocoloId: { type: string, format: uuid }
+
+# --- DTO DE PRONTUÁRIO (Finalização Rigorosa) ---
+FinalizacaoAtendimentoRequest:
+  type: object
+  required: [queixaPrincipal, condutaClinica, diagnostico]
+  properties:
+    titulo: { type: string }
+    protocoloId: { type: string, format: uuid }
+    queixaPrincipal: { type: string }
+    historicoClinico: { type: string }
+    exameFisico: { type: string }
+    diagnostico: { type: string }
+    condutaClinica: { type: string }
+    observacoes: { type: string }
+
+# --- DTO GENÉRICO (Atualização/Legado) ---
+AtendimentoRequest:
+  type: object
+  required: [pacienteId, veterinarioId, titulo]
+  properties:
+    pacienteId: { type: string, format: uuid }
+    veterinarioId: { type: string, format: uuid }
+    protocoloId: { type: string, format: uuid }
+    dataHora: { type: string, format: date-time }
+    titulo: { type: string }
+    status: { $ref: '#/StatusAtendimentoEnum' }
+    queixaPrincipal: { type: string }
+    historicoClinico: { type: string }
+    exameFisico: { type: string }
+    diagnostico: { type: string }
+    condutaClinica: { type: string }
+    observacoes: { type: string }
+    orientacoesManejo:
+      type: string
+      description: "JSON stringificado contendo os 8 pilares de manejo"
+
+AtendimentoResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    pacienteId: { type: string, format: uuid }
+    dataHora: { type: string, format: date-time }
+    titulo: { type: string }
+    status: { $ref: '#/StatusAtendimentoEnum' }
+    queixaPrincipal: { type: string }
+    historicoClinico: { type: string }
+    exameFisico: { type: string }
+    diagnostico: { type: string }
+    condutaClinica: { type: string }
+    observacoes: { type: string }
+    protocoloId: { type: string, format: uuid }
+    veterinarioId: { type: string, format: uuid }
+    veterinarioNome: { type: string }
+    veterinarioCrmv: { type: string }
+    pacienteNome: { type: string }
+    pacienteEspecie: { type: string }
+    orientacoesManejo: { type: string }
+
+ExameAnexoResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    atendimentoId:
+      type: string
+      format: uuid
+    nomeArquivo:
+      type: string
+      example: "hemograma_thor.pdf"
+    tipoArquivo:
+      type: string
+      example: "application/pdf"
+    urlArquivo:
+      type: string
+      description: "URL assinada ou caminho público do arquivo"
+    observacoes:
+      type: string
+    criadoEm:
+      type: string
+      format: date-time
+
+# Wrappers
+ApiResponseExameAnexo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem: { type: string }
+    dados: { $ref: '#/ExameAnexoResponse' }
+
+# --- WRAPPERS ---
+
+ApiResponseListaExameAnexo:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/ExameAnexoResponse' }
+
+ApiResponsePaciente:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/PacienteResponse' }
+ApiResponseListaPaciente:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { type: array, items: { $ref: '#/PacienteResponse' } }
+ApiResponseAtendimento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/AtendimentoResponse' }
+ApiResponseListaAtendimento:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { type: array, items: { $ref: '#/AtendimentoResponse' } }
+```
+

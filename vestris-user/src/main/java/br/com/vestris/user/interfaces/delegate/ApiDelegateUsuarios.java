@@ -3,10 +3,7 @@ package br.com.vestris.user.interfaces.delegate;
 import br.com.vestris.user.application.ServiceUsuario;
 import br.com.vestris.user.domain.model.Usuario;
 import br.com.vestris.user.interfaces.api.GestaoUsuariosApiDelegate;
-import br.com.vestris.user.interfaces.dto.ApiResponseListaUsuario;
-import br.com.vestris.user.interfaces.dto.ApiResponseUsuario;
-import br.com.vestris.user.interfaces.dto.AtualizacaoUsuarioRequest;
-import br.com.vestris.user.interfaces.dto.UsuarioResponse;
+import br.com.vestris.user.interfaces.dto.*;
 import jdk.jfr.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +20,9 @@ public class ApiDelegateUsuarios implements GestaoUsuariosApiDelegate {
 
     @Override
     public ResponseEntity<ApiResponseListaUsuario> listarUsuarios(String perfil, Boolean apenasComCrmv) {
+        // O ServiceUsuario.listar espera uma String ou um Enum interno do domínio.
+        // Vamos passar as strings e deixar o service resolver ou converter aqui se necessário.
+
         List<UsuarioResponse> lista = servico.listar(perfil, apenasComCrmv).stream()
                 .map(this::converter)
                 .collect(Collectors.toList());
@@ -63,9 +63,27 @@ public class ApiDelegateUsuarios implements GestaoUsuariosApiDelegate {
         dto.setId(u.getId());
         dto.setNome(u.getNome());
         dto.setEmail(u.getEmail());
-        // Ajuste o Enum conforme gerado
-        dto.setPerfil(UsuarioResponse.PerfilEnum.valueOf(u.getPerfil().name()));
         dto.setCrmv(u.getCrmv());
+
+        // Conversão segura dos Enums do Domínio para os Enums do DTO
+        if (u.getPerfil() != null) {
+            try {
+                // Tenta converter o nome do enum do domínio (ex: ADMIN_GLOBAL) para o DTO
+                dto.setPerfil(UsuarioResponsePerfilEnum.valueOf(u.getPerfil().name()));
+            } catch (Exception e) {
+                // Fallback seguro caso o banco tenha algo estranho
+                dto.setPerfil(UsuarioResponsePerfilEnum.VETERINARIO);
+            }
+        }
+
+        if (u.getScope() != null) {
+            try {
+                dto.setScope(UsuarioResponseScopeEnum.valueOf(u.getScope().name()));
+            } catch (Exception e) {
+                dto.setScope(UsuarioResponseScopeEnum.TENANT);
+            }
+        }
+
         return dto;
     }
 }

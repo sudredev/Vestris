@@ -1,0 +1,40 @@
+# ROTA: /api/v1/saas/minha-assinatura
+assinatura_atual:
+  get:
+    tags: [Assinaturas]
+    summary: Obter status da assinatura da clínica logada
+    operationId: obterMinhaAssinatura
+    parameters:
+      - name: clinicaId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Detalhes da assinatura vigente
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAssinatura' }
+
+# ROTA: /api/v1/saas/assinar
+assinar_plano:
+  post:
+    tags: [Assinaturas]
+    summary: Contratar ou mudar de plano
+    description: "Inicia o fluxo de checkout ou altera o plano imediatamente se for upgrade gratuito/trial"
+    operationId: assinarPlano
+    parameters:
+      - name: clinicaId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/AssinarPlanoRequest' }
+    responses:
+      '200':
+        description: Sucesso (ou Link de Pagamento no futuro)
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAssinatura' }

@@ -35,6 +35,8 @@ MedicamentoRequest:
     principioAtivoId:
       type: string
       format: uuid
+    principioAtivoNome:
+      type: string
     concentracao:
       type: string
       example: "100 mg/ml"
@@ -55,6 +57,8 @@ MedicamentoResponse:
     principioAtivoId:
       type: string
       format: uuid
+    principioAtivoNome:
+      type: string
     concentracao:
       type: string
     fabricante:
@@ -67,17 +71,25 @@ GravidadeEnum:
 
 ContraindicacaoRequest:
   type: object
-  required: [medicamentoId, especieId, referenciaId, gravidade]
+  required: [ especieId, gravidade, descricao ] # MedicamentoId não é mais obrigatório se tiver Principio
   properties:
     medicamentoId:
       type: string
       format: uuid
+      nullable: true
+    principioAtivoId:   # <--- CAMPO NOVO
+      type: string
+      format: uuid
+      nullable: true
     especieId:
       type: string
       format: uuid
-    referenciaId:
+    referenciaId:       # <--- PODE REMOVER OU DEIXAR COMO LEGADO
       type: string
       format: uuid
+      nullable: true
+    referenciaTexto:    # <--- CAMPO NOVO PREFERENCIAL
+      type: string
     gravidade:
       $ref: '#/GravidadeEnum'
     descricao:
@@ -103,6 +115,14 @@ ContraindicacaoResponse:
       $ref: '#/GravidadeEnum'
     descricao:
       type: string
+
+AlertaSeguranca:
+  type: object
+  properties:
+    nivel: { type: string, enum: [LEVE, MODERADA, GRAVE, FATAL] }
+    descricao: { type: string }
+    medicamento: { type: string }
+    principioAtivo: { type: string }
 
   # Wrappers
 ApiResponseContraindicacao:

@@ -1,5 +1,6 @@
 package br.com.vestris.pharmacology.domain.model;
 
+import br.com.vestris.pharmacology.interfaces.dto.MedicamentoRequest;
 import br.com.vestris.shared.domain.model.EntidadeBase;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,14 +14,11 @@ import java.util.UUID;
 @Table(name = "contraindicacoes", schema = "pharmacology_schema")
 public class Contraindicacao extends EntidadeBase {
     @ManyToOne(optional = false)
-    @JoinColumn(name = "medicamento_id", nullable = false)
-    private Medicamento medicamento;
+    @JoinColumn(name = "principio_ativo_id", nullable = false)
+    private PrincipioAtivo principioAtivo;
 
-    @Column(nullable = false)
-    private UUID especieId; // FK Lógica para Species
-
-    @Column(nullable = false)
-    private UUID referenciaId; // FK Lógica para Reference
+    @Column(name = "especie_id", nullable = false)
+    private UUID especieId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -28,6 +26,8 @@ public class Contraindicacao extends EntidadeBase {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String descricao;
+
+    private String referenciaTexto;
 
     public enum Gravidade {
         LEVE, MODERADA, GRAVE, FATAL

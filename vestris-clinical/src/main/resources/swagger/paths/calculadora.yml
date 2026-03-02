@@ -1,9 +1,8 @@
-#ROTA: /api/v1/calculadora/dosagem
+# ROTA 1: CÁLCULO BASEADO EM PROTOCOLO (JÁ EXISTENTE, MANTÉM)
 calculadora_item:
   post:
     tags: [Calculadora]
-    summary: Calcular dose baseada em protocolo
-    description: "Executa o cálculo matemático respeitando as faixas do protocolo e a concentração do medicamento."
+    summary: Calcular via Protocolo
     operationId: calcularDosagemSegura
     requestBody:
       content:
@@ -11,7 +10,40 @@ calculadora_item:
           schema: { $ref: '../components/schemas.yml#/CalculoSeguroRequest' }
     responses:
       '200':
-        description: Cálculo realizado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseCalculo' }
+
+# ROTA 2: CÁLCULO LIVRE (MATEMÁTICA PURA) - NOVO
+calculadora_livre:
+  post:
+    tags: [Calculadora]
+    summary: Calculadora Livre (Sem Validação)
+    description: "Faz apenas o cálculo matemático de volume com base na dose e concentração informadas."
+    operationId: calcularDoseLivre
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/CalculoLivreRequest' }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseCalculo' }
+
+# ROTA 3: VALIDAÇÃO DE SEGURANÇA (CATÁLOGO) - NOVO
+calculadora_validar:
+  post:
+    tags: [Calculadora]
+    summary: Validar Dose (Catálogo)
+    description: "Verifica se a dose está segura cruzando com a base científica."
+    operationId: validarDoseCatalogo
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/CalculoCatalogoRequest' }
+    responses:
+      '200':
         content:
           application/json:
             schema: { $ref: '../components/schemas.yml#/ApiResponseCalculo' }

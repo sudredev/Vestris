@@ -1,0 +1,76 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Farmacologia
+  description: Gestão de Medicamentos e Princípios Ativos
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  # --- PRINCÍPIOS ATIVOS ---
+  /api/v1/principios-ativos:
+    $ref: './paths/principios-ativos.yml#/principios_colecao'
+
+  /api/v1/principios-ativos/{id}:
+    $ref: './paths/principios-ativos.yml#/principios_item'
+
+  # --- MEDICAMENTOS ---
+  /api/v1/medicamentos:
+    $ref: './paths/medicamentos.yml#/medicamentos_colecao'
+
+  /api/v1/medicamentos/{id}:
+    $ref: './paths/medicamentos.yml#/medicamentos_item'
+
+  # --- CONTRAINDICAÇÕES ---
+  /api/v1/contraindicacoes:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_colecao'
+
+  /api/v1/medicamentos/{medicamentoId}/contraindicacoes:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_por_medicamento'
+
+  /api/v1/contraindicacoes/{id}:
+    $ref: './paths/contraindicacoes.yml#/contraindicacoes_por_id'
+
+  /api/v1/seguranca/validar:
+    $ref: './paths/contraindicacoes.yml#/validar_seguranca'
+
+# Components (apenas referenciando o arquivo de schemas que você já tem)
+components:
+  schemas:
+    PrincipioAtivoRequest:
+      $ref: "./components/schemas.yml#/PrincipioAtivoRequest"
+    # ... O Swagger vai resolver os outros automaticamente através das refs nos paths
+    # Mas se quiser garantir que apareçam na home do Swagger UI, liste todos aqui:
+    PrincipioAtivoResponse:
+      $ref: "./components/schemas.yml#/PrincipioAtivoResponse"
+    MedicamentoRequest:
+      $ref: "./components/schemas.yml#/MedicamentoRequest"
+    MedicamentoResponse:
+      $ref: "./components/schemas.yml#/MedicamentoResponse"
+    ContraindicacaoRequest:
+      $ref: "./components/schemas.yml#/ContraindicacaoRequest"
+    ContraindicacaoResponse:
+      $ref: "./components/schemas.yml#/ContraindicacaoResponse"
+    AlertaSeguranca:
+      $ref: "./components/schemas.yml#/AlertaSeguranca"
+    ApiResponsePrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponsePrincipioAtivo"
+    ApiResponseListaPrincipioAtivo:
+      $ref: "./components/schemas.yml#/ApiResponseListaPrincipioAtivo"
+    ApiResponseMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseMedicamento"
+    ApiResponseListaMedicamento:
+      $ref: "./components/schemas.yml#/ApiResponseListaMedicamento"
+    ApiResponseContraindicacao:
+      $ref: "./components/schemas.yml#/ApiResponseContraindicacao"
+    ApiResponseListaContraindicacao:
+      $ref: "./components/schemas.yml#/ApiResponseListaContraindicacao"
+```
+

@@ -1,0 +1,89 @@
+clinica_geral:
+  get:
+    tags: [Clinica]
+    summary: Obter dados da minha clínica
+    operationId: obterMinhaClinica
+    parameters:
+      - name: usuarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseClinica' }
+
+  post:
+    tags: [Clinica]
+    summary: Criar ou Atualizar minha clínica
+    operationId: salvarMinhaClinica
+    parameters:
+      - name: usuarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/ClinicaRequest' }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseClinica' }
+
+clinica_equipe:
+  get:
+    tags: [ Clinica ]
+    summary: Listar veterinários da minha clínica
+    operationId: listarEquipe
+    parameters:
+      - name: usuarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaUsuario' }
+
+  post:
+    tags: [ Clinica ]
+    summary: Adicionar veterinário à equipe
+    operationId: adicionarMembroEquipe
+    parameters:
+      - name: usuarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/NovoMembroRequest' }
+    responses:
+      '201':
+        description: Membro criado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseUsuario' }
+  delete:
+    tags: [ Clinica ]
+    summary: Remover veterinário da equipe
+    description: "Desvincula o veterinário da clínica. Ele perde acesso aos dados, mas o histórico é mantido."
+    operationId: removerMembroEquipe
+    parameters:
+      - name: usuarioId
+        in: query
+        description: "ID do Admin que está removendo"
+        required: true
+        schema: { type: string, format: uuid }
+      - name: membroId
+        in: query
+        description: "ID do Veterinário a ser removido"
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Removido com sucesso

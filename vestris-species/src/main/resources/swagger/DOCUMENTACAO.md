@@ -1,0 +1,48 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Espécies
+  description: API de Taxonomia do Silvet
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+# Importando os caminhos
+paths:
+  /api/v1/especies:
+    $ref: './paths/especies.yml#/paths/~1api~1v1~1especies'
+
+  /api/v1/especies/{id}:
+    $ref: './paths/especies.yml#/paths/~1api~1v1~1especies~1{id}'
+
+  # ADICIONE ESTA LINHA:
+  /api/v1/especies/{especieId}/exame-fisico:
+    $ref: './paths/exames-fisicos.yml#/exame_fisico_por_especie'
+
+  /api/v1/exames-fisicos:
+    $ref: './paths/exames-fisicos.yml#/exames_fisicos_colecao'
+
+components:
+  schemas:
+    EspecieRequest:
+      $ref: "./components/schemas.yml#/EspecieRequest"
+    EspecieResponse:
+      $ref: "./components/schemas.yml#/EspecieResponse"
+    ModeloExameRequest:
+      $ref: "./components/schemas.yml#/ModeloExameRequest"
+    ModeloExameResponse:
+      $ref: "./components/schemas.yml#/ModeloExameResponse"
+    ApiResponseModeloExame:
+      $ref: "./components/schemas.yml#/ApiResponseModeloExame"
+    ApiResponseEspecie:
+      $ref: "./components/schemas.yml#/ApiResponseEspecie"
+    ApiResponseListaEspecie:
+      $ref: "./components/schemas.yml#/ApiResponseListaEspecie"
+```
+

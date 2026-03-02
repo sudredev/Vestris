@@ -1,6 +1,7 @@
 package br.com.vestris.user.application;
 
 import br.com.vestris.shared.domain.exceptions.ExcecaoRegraNegocio;
+import br.com.vestris.shared.domain.exceptions.ExceptionRecursoNaoEncontrado;
 import br.com.vestris.user.domain.model.Perfil;
 import br.com.vestris.user.domain.model.Usuario;
 import br.com.vestris.user.domain.repository.RepositorioUsuario;
@@ -9,44 +10,68 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ServiceAuth {
     private final RepositorioUsuario repositorio;
-    private final PasswordEncoder passwordEncoder; // Criptografia
-    private final ServicoToken servicoToken;       // JWT
+    private final PasswordEncoder passwordEncoder;
+    private final ServicoToken servicoToken;
 
     public Usuario registrar(String nome, String email, String senhaAberta, String crmv) {
-        // 1. Validar duplicidade
         if (repositorio.existsByEmail(email)) {
             throw new ExcecaoRegraNegocio("E-mail já cadastrado.");
         }
-
-        // 2. Criar usuário
         Usuario novo = new Usuario();
         novo.setNome(nome);
         novo.setEmail(email);
         novo.setCrmv(crmv);
-        // 3. Definir perfil (Regra simples: Tem CRMV? É Veterinário. Senão, Estudante)
+        // Default para cadastro comum
         novo.setPerfil(crmv != null && !crmv.isBlank() ? Perfil.VETERINARIO : Perfil.ESTUDANTE);
-
-        // 4. CRIPTOGRAFAR A SENHA ANTES DE SALVAR
+        novo.setScope(Usuario.UserScope.TENANT); // Padrão é Tenant
         novo.setSenha(passwordEncoder.encode(senhaAberta));
 
         return repositorio.save(novo);
     }
 
     public String login(String email, String senha) {
-        // 1. Buscar usuário
         Usuario usuario = repositorio.findByEmail(email)
                 .orElseThrow(() -> new ExcecaoRegraNegocio("Usuário ou senha inválidos."));
 
-        // 2. Verificar senha (Compara a senha aberta com o Hash do banco)
         if (!passwordEncoder.matches(senha, usuario.getSenha())) {
             throw new ExcecaoRegraNegocio("Usuário ou senha inválidos.");
         }
-
-        // 3. Gerar e retornar Token
         return servicoToken.gerarToken(usuario);
+    }
+
+    // --- GOD MODE (IMPERSONATE) ---
+    public String impersonate(UUID adminId, UUID targetUserId) {
+        System.out.println("--- INICIANDO IMPERSONATE ---");
+        System.out.println("Admin ID recebido: " + adminId);
+
+        Usuario admin = repositorio.findById(adminId)
+                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Admin", adminId.toString()));
+
+        System.out.println("Admin encontrado: " + admin.getEmail());
+        System.out.println("Scope do Admin no Objeto: " + admin.getScope());
+
+        // VALIDAÇÃO COM LOG
+        if (admin.getScope() == null) {
+            System.out.println("ERRO: Scope é NULL");
+            throw new ExcecaoRegraNegocio("Seu usuário não possui escopo definido.");
+        }
+
+        if (admin.getScope() != Usuario.UserScope.GLOBAL) {
+            System.out.println("ERRO: Scope não é GLOBAL. É: " + admin.getScope());
+            throw new ExcecaoRegraNegocio("Acesso negado: Requer privilégio GLOBAL.");
+        }
+
+        Usuario alvo = repositorio.findById(targetUserId)
+                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Usuário alvo", targetUserId.toString()));
+
+        System.out.println("Alvo encontrado: " + alvo.getEmail());
+
+        return servicoToken.gerarToken(alvo);
     }
 }

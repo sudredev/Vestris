@@ -2,12 +2,15 @@ package br.com.vestris.pharmacology.application;
 
 import br.com.vestris.pharmacology.domain.model.Contraindicacao;
 import br.com.vestris.pharmacology.domain.model.Medicamento;
+import br.com.vestris.pharmacology.domain.model.PrincipioAtivo;
 import br.com.vestris.pharmacology.domain.repository.RepositorioContraindicacao;
 import br.com.vestris.pharmacology.domain.repository.RepositorioMedicamento;
+import br.com.vestris.pharmacology.domain.repository.RepositorioPrincipioAtivo;
 import br.com.vestris.reference.application.ServiceReferencia;
 import br.com.vestris.shared.domain.exceptions.ExcecaoRegraNegocio;
 import br.com.vestris.shared.domain.exceptions.ExceptionRecursoNaoEncontrado;
 import br.com.vestris.species.application.ServiceEspecie;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,37 +22,43 @@ import java.util.UUID;
 public class ServiceContraindicacao {
     private final RepositorioContraindicacao repoContraindicacao;
     private final RepositorioMedicamento repoMedicamento;
-
-    // Injeção dos outros módulos
+    private final RepositorioPrincipioAtivo repoPrincipio;
     private final ServiceEspecie serviceEspecie;
-    private final ServiceReferencia serviceReferencia;
 
-    public Contraindicacao criar(UUID medicamentoId, UUID especieId, UUID referenciaId,
+    @Transactional
+    public Contraindicacao criar(UUID medicamentoId, UUID principioAtivoId, UUID especieId, String referenciaTexto,
                                  Contraindicacao.Gravidade gravidade, String descricao) {
 
-        // 1. Validar Medicamento (Interno)
-        Medicamento med = repoMedicamento.findById(medicamentoId)
-                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Medicamento", medicamentoId.toString()));
+        PrincipioAtivo principio = null;
 
-        // 2. Validar Espécie (Externo)
+        // 1. Tenta pelo Princípio Ativo (Prioridade para o Admin)
+        if (principioAtivoId != null) {
+            principio = repoPrincipio.findById(principioAtivoId)
+                    .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Princípio Ativo", principioAtivoId.toString()));
+        }
+        // 2. Fallback: Tenta pelo Medicamento (Legado)
+        else if (medicamentoId != null) {
+            Medicamento med = repoMedicamento.findById(medicamentoId)
+                    .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Medicamento", medicamentoId.toString()));
+            principio = med.getPrincipioAtivo();
+        } else {
+            throw new ExcecaoRegraNegocio("Informe o Medicamento ou o Princípio Ativo.");
+        }
+
+        // 2. Validar Espécie
         if (!serviceEspecie.existePorId(especieId)) {
             throw new ExcecaoRegraNegocio("Espécie não encontrada.");
         }
 
-        // 3. Validar Referência (Externo)
-        if (!serviceReferencia.existePorId(referenciaId)) { // Certifique-se de criar este método lá no módulo Reference
-            throw new ExcecaoRegraNegocio("Referência bibliográfica não encontrada.");
-        }
-
-        // 4. Validar Duplicidade
-        if (repoContraindicacao.existsByMedicamentoIdAndEspecieId(medicamentoId, especieId)) {
-            throw new ExcecaoRegraNegocio("Já existe uma contraindicação deste medicamento para esta espécie.");
+        // 3. Validar Duplicidade
+        if (repoContraindicacao.existsByPrincipioAtivoIdAndEspecieId(principio.getId(), especieId)) {
+            throw new ExcecaoRegraNegocio("Já existe uma contraindicação deste princípio ativo para esta espécie.");
         }
 
         Contraindicacao nova = new Contraindicacao();
-        nova.setMedicamento(med);
+        nova.setPrincipioAtivo(principio);
         nova.setEspecieId(especieId);
-        nova.setReferenciaId(referenciaId);
+        nova.setReferenciaTexto(referenciaTexto);
         nova.setGravidade(gravidade);
         nova.setDescricao(descricao);
 
@@ -57,7 +66,11 @@ public class ServiceContraindicacao {
     }
 
     public List<Contraindicacao> listarPorMedicamento(UUID medicamentoId) {
-        return repoContraindicacao.findByMedicamentoId(medicamentoId);
+        Medicamento med = repoMedicamento.findById(medicamentoId)
+                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Medicamento", medicamentoId.toString()));
+
+        // Busca contraindicações ligadas ao princípio ativo deste medicamento
+        return repoContraindicacao.findByPrincipioAtivoId(med.getPrincipioAtivo().getId());
     }
 
     public Contraindicacao buscarPorId(UUID id) {
@@ -65,32 +78,25 @@ public class ServiceContraindicacao {
                 .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Contraindicação", id.toString()));
     }
 
-    public Contraindicacao atualizar(UUID id, UUID novoEspecieId, UUID novoRefId,
+    @Transactional
+    public Contraindicacao atualizar(UUID id, UUID novoEspecieId, String novaReferencia,
                                      Contraindicacao.Gravidade novaGravidade, String novaDescricao) {
 
         Contraindicacao existente = buscarPorId(id);
 
-        // 1. Se mudou a Espécie, valida se a nova existe E se não gera duplicidade
+        // 1. Se mudou a Espécie
         if (!existente.getEspecieId().equals(novoEspecieId)) {
             if (!serviceEspecie.existePorId(novoEspecieId)) {
                 throw new ExcecaoRegraNegocio("A nova Espécie informada não existe.");
             }
-            // Verifica duplicidade (Medicamento X + Nova Espécie Y)
-            if (repoContraindicacao.existsByMedicamentoIdAndEspecieId(existente.getMedicamento().getId(), novoEspecieId)) {
-                throw new ExcecaoRegraNegocio("Já existe uma contraindicação deste medicamento para a nova espécie selecionada.");
+            if (repoContraindicacao.existsByPrincipioAtivoIdAndEspecieId(existente.getPrincipioAtivo().getId(), novoEspecieId)) {
+                throw new ExcecaoRegraNegocio("Já existe uma contraindicação para a nova espécie selecionada.");
             }
             existente.setEspecieId(novoEspecieId);
         }
 
-        // 2. Se mudou a Referência, valida
-        if (!existente.getReferenciaId().equals(novoRefId)) {
-            if (!serviceReferencia.existePorId(novoRefId)) {
-                throw new ExcecaoRegraNegocio("A nova Referência Bibliográfica não existe.");
-            }
-            existente.setReferenciaId(novoRefId);
-        }
-
-        // 3. Atualiza dados simples
+        // 2. Atualiza dados simples
+        existente.setReferenciaTexto(novaReferencia);
         existente.setGravidade(novaGravidade);
         existente.setDescricao(novaDescricao);
 

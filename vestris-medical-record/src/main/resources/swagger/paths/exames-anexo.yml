@@ -1,0 +1,64 @@
+# vestris-medical-record/src/main/resources/swagger/paths/exames-anexos.yml
+
+# ROTA: /api/v1/atendimentos/{atendimentoId}/exames
+exames_por_atendimento:
+  get:
+    tags: [Exames]
+    summary: Listar exames de um atendimento
+    operationId: listarExamesPorAtendimento
+    parameters:
+      - name: atendimentoId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Lista recuperada
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaExameAnexo' }
+
+  post:
+    tags: [Exames]
+    summary: Anexar novo exame/arquivo
+    operationId: uploadExame
+    parameters:
+      - name: atendimentoId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required: [ arquivo ]
+            properties:
+              arquivo:
+                type: string
+                format: binary
+                description: "Arquivo PDF, JPG ou PNG"
+              observacoes:
+                type: string
+                description: "Notas sobre o exame (opcional)"
+    responses:
+      '201':
+        description: Upload realizado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseExameAnexo' }
+
+# ROTA: /api/v1/exames/{id}
+exame_item:
+  delete:
+    tags: [Exames]
+    summary: Remover anexo
+    operationId: deletarExame
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204':
+        description: Removido com sucesso

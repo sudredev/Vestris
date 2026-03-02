@@ -1,3 +1,4 @@
+# vestris-user/src/main/resources/swagger/paths/usuarios.yml
 # Rota: /api/v1/usuarios
 usuarios_colecao:
   get:
@@ -7,11 +8,11 @@ usuarios_colecao:
     parameters:
       - name: perfil
         in: query
-        description: "Filtrar por perfil (VETERINARIO, ESTUDANTE, ADMIN)"
+        description: "Filtrar por perfil"
         required: false
         schema:
           type: string
-          enum: [ADMIN, VETERINARIO, ESTUDANTE]
+          enum: [ADMIN_GLOBAL, ADMIN_GESTOR, ADMIN_CLINICO, VETERINARIO, ESTUDANTE]
       - name: apenasComCrmv
         in: query
         description: "Se true, traz apenas quem tem CRMV preenchido"

@@ -62,6 +62,18 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>br.com.vestris</groupId>
+            <artifactId>vestris-feedback</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.vestris</groupId>
+            <artifactId>vestris-saas</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- 2. Banco de Dados (PostgreSQL) -->
         <dependency>
             <groupId>org.postgresql</groupId>

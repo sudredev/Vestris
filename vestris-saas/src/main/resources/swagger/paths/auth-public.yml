@@ -1,0 +1,16 @@
+# ROTA: /api/v1/public/cadastro-saas
+cadastro_saas:
+  post:
+    tags: [Publico]
+    summary: Criar conta com plano e clínica
+    operationId: cadastrarClienteSaas
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/CadastroSaasRequest' }
+    responses:
+      '201':
+        description: Conta criada e logada
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseToken' }

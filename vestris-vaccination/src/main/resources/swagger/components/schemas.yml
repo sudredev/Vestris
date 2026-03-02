@@ -33,6 +33,52 @@ VacinaResponse:
       type: string
       format: date-time
 
+AplicacaoVacinaRequest:
+  type: object
+  required: [ vacinaId, dataAplicacao ]
+  properties:
+    vacinaId: { type: string, format: uuid }
+    dataAplicacao: { type: string, format: date }
+    dataProximaDose: { type: string, format: date, nullable: true }
+    lote: { type: string }
+    fabricante: { type: string } # Novo
+    via: { type: string } # Novo
+    doseAplicada: { type: string } # Novo
+    observacoes: { type: string }
+
+AplicacaoVacinaResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    pacienteId: { type: string, format: uuid }
+    pacienteNome: { type: string } # Importante para o Hub
+    pacienteEspecie: { type: string } # Importante para o Hub
+    tutorNome: { type: string } # Importante para contato
+    vacinaId: { type: string, format: uuid }
+    vacinaNome: { type: string }
+    dataAplicacao: { type: string, format: date }
+    dataProximaDose: { type: string, format: date }
+    status: { type: string, enum: [EM_DIA, ATRASADA, CONCLUIDA] } # Calculado no backend
+    lote: { type: string }
+    via: { type: string }
+    doseAplicada: { type: string }
+    observacoes: { type: string }
+    veterinarioNome: { type: string }
+
+ApiResponseAplicacaoVacina:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados: { $ref: '#/AplicacaoVacinaResponse' }
+
+ApiResponseListaAplicacaoVacina:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/AplicacaoVacinaResponse' }
+
 # --- PROTOCOLO VACINAL (NOVO) ---
 ProtocoloVacinalRequest:
   type: object

@@ -25,6 +25,16 @@ paths:
   /api/v1/especies/{especieId}/protocolos-vacinais:
     $ref: './paths/protocolos-vacinais.yml#/protocolos_por_especie'
 
+  /api/v1/pacientes/{pacienteId}/vacinas:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_paciente'
+  /api/v1/vacinas-aplicadas/{id}:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_item'
+  /api/v1/hub-vacinacao/previstas:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_previstas'
+  /api/v1/hub-vacinacao/atrasadas:
+    $ref: './paths/vacinacao-paciente.yml#/vacinacao_atrasadas'
+
+
 components:
   schemas:
     VacinaRequest:

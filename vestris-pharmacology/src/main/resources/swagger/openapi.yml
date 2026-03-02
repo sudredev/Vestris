@@ -32,6 +32,12 @@ paths:
   /api/v1/contraindicacoes/{id}:
     $ref: './paths/contraindicacoes.yml#/contraindicacoes_por_id'
 
+  /api/v1/seguranca/validar:
+    $ref: './paths/contraindicacoes.yml#/validar_seguranca'
+
+  /api/v1/medicamentos/{id}/vias:
+    $ref: './paths/medicamentos.yml#/vias_por_medicamento'
+
 # Components (apenas referenciando o arquivo de schemas que você já tem)
 components:
   schemas:
@@ -49,6 +55,8 @@ components:
       $ref: "./components/schemas.yml#/ContraindicacaoRequest"
     ContraindicacaoResponse:
       $ref: "./components/schemas.yml#/ContraindicacaoResponse"
+    AlertaSeguranca:
+      $ref: "./components/schemas.yml#/AlertaSeguranca"
     ApiResponsePrincipioAtivo:
       $ref: "./components/schemas.yml#/ApiResponsePrincipioAtivo"
     ApiResponseListaPrincipioAtivo:

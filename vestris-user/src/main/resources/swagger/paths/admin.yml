@@ -1,0 +1,21 @@
+# /api/v1/admin/impersonate
+impersonate:
+  post:
+    tags: [AdminGlobal]
+    summary: Gerar token de acesso para qualquer usuário
+    operationId: impersonateUser
+    parameters:
+      - name: adminId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+      - name: targetUserId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Token gerado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseToken' }

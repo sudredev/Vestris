@@ -1,8 +1,27 @@
-#Rota: /api/v1/atendimentos
+# Rota: /api/v1/atendimentos/agendar (NOVA ROTA DE AGENDAMENTO)
+agendamento_item:
+  post:
+    tags: [Atendimentos]
+    summary: Agendar novo atendimento
+    description: "Cria um registro com status AGENDADO. Dados clínicos não são permitidos aqui."
+    operationId: agendarAtendimento
+    requestBody:
+      content:
+        application/json:
+          # CORREÇÃO: Aponta para AgendamentoRequest
+          schema: { $ref: '../components/schemas.yml#/AgendamentoRequest' }
+    responses:
+      '200':
+        description: Agendado com sucesso
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
+
+# Rota: /api/v1/atendimentos (Rota Legada/Genérica - Mantida por compatibilidade ou criação direta completa)
 atendimentos_item:
   post:
-    tags: [ Atendimentos ]
-    summary: Registrar novo atendimento
+    tags: [Atendimentos]
+    summary: Registrar atendimento completo (Legado)
     operationId: criarAtendimento
     requestBody:
       content:
@@ -14,11 +33,65 @@ atendimentos_item:
         content:
           application/json:
             schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
+  get:
+    tags: [Atendimentos]
+    summary: Listar meus atendimentos (Agenda)
+    operationId: listarMeusAtendimentos
+    parameters:
+      - name: veterinarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+      - name: status
+        in: query
+        required: false
+        schema: { $ref: '../components/schemas.yml#/StatusAtendimentoEnum' }
+      - name: pacienteId
+        in: query
+        required: false
+        schema: { type: string, format: uuid }
+      - name: dataInicio
+        in: query
+        required: false
+        schema: { type: string, format: date }
+      - name: dataFim
+        in: query
+        required: false
+        schema: { type: string, format: date }
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAtendimento' }
+
+# Rota: /api/v1/atendimentos/{id}/finalizar (FINALIZAÇÃO)
+atendimentos_finalizados:
+  put:
+    tags: [Atendimentos]
+    summary: Finalizar atendimento (Preencher Prontuário)
+    description: "Recebe os dados clínicos e muda status para REALIZADO"
+    operationId: finalizarAtendimento
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          # CORREÇÃO: Aponta para FinalizacaoAtendimentoRequest (Valida campos obrigatórios)
+          schema: { $ref: '../components/schemas.yml#/FinalizacaoAtendimentoRequest' }
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
 
 # Rota: /api/v1/pacientes/{pacienteId}/atendimentos
 atendimentos_por_paciente:
   get:
-    tags: [ Atendimentos ]
+    tags: [Atendimentos]
     summary: Histórico clínico do paciente
     operationId: listarAtendimentosPorPaciente
     parameters:
@@ -33,7 +106,7 @@ atendimentos_por_paciente:
           application/json:
             schema: { $ref: '../components/schemas.yml#/ApiResponseListaAtendimento' }
 
-#Rota: /api/v1/atendimentos/{id}
+# ROTA: /api/v1/atendimentos/{id}
 atendimentos_por_id:
   parameters:
     - name: id
@@ -41,8 +114,8 @@ atendimentos_por_id:
       required: true
       schema: { type: string, format: uuid }
   get:
-    tags: [ Atendimentos ]
-    summary: Ver detalhes do atendimento
+    tags: [Atendimentos]
+    summary: Ver detalhes
     operationId: buscarAtendimentoPorId
     responses:
       '200':
@@ -50,8 +123,8 @@ atendimentos_por_id:
           application/json:
             schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
   put:
-    tags: [ Atendimentos ]
-    summary: Retificar atendimento
+    tags: [Atendimentos]
+    summary: Atualizar (Evoluir status, adicionar obs)
     operationId: atualizarAtendimento
     requestBody:
       content:
@@ -59,6 +132,31 @@ atendimentos_por_id:
           schema: { $ref: '../components/schemas.yml#/AtendimentoRequest' }
     responses:
       '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }
+
+# ROTA: /api/v1/atendimentos/{id}/status:
+atendimentos_status:
+  patch:
+    tags: [Atendimentos]
+    summary: Alterar status do atendimento
+    operationId: atualizarStatusAtendimento
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status: { $ref: '../components/schemas.yml#/StatusAtendimentoEnum' }
+    responses:
+      '200':
+        description: Status atualizado
         content:
           application/json:
             schema: { $ref: '../components/schemas.yml#/ApiResponseAtendimento' }

@@ -1,0 +1,79 @@
+# ROTA: /api/v1/pacientes/{pacienteId}/vacinas
+vacinacao_paciente:
+  get:
+    tags: [VacinacaoPaciente]
+    summary: Listar vacinas aplicadas no paciente
+    operationId: listarVacinasDoPaciente
+    parameters:
+      - name: pacienteId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Histórico vacinal
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAplicacaoVacina' }
+
+  post:
+    tags: [VacinacaoPaciente]
+    summary: Registrar aplicação de vacina
+    operationId: registrarVacinaPaciente
+    parameters:
+      - name: pacienteId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+      - name: veterinarioId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/AplicacaoVacinaRequest' }
+    responses:
+      '201':
+        description: Registrado com sucesso
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseAplicacaoVacina' }
+
+# ROTA: /api/v1/vacinas-aplicadas/{id}
+vacinacao_item:
+  delete:
+    tags: [VacinacaoPaciente]
+    summary: Remover registro de vacina (se erro)
+    operationId: deletarVacinaAplicada
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '204': { description: Removido }
+
+# ROTA: /api/v1/hub-vacinacao/atrasadas
+vacinacao_atrasadas:
+  get:
+    tags: [HubVacinacao]
+    summary: Listar vacinas atrasadas
+    operationId: listarVacinasAtrasadas
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAplicacaoVacina' }
+
+# ROTA: /api/v1/hub-vacinacao/previstas
+vacinacao_previstas:
+  get:
+    tags: [HubVacinacao]
+    summary: Listar próximas vacinas (30 dias)
+    operationId: listarVacinasPrevistas
+    responses:
+      '200':
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAplicacaoVacina' }

@@ -80,3 +80,28 @@ contraindicacoes_por_id:
     responses:
       '204': { description: Removido }
 
+# ROTA: /api/v1/seguranca/validar
+validar_seguranca:
+  get:
+    tags: [SegurancaClinica]
+    summary: Validar medicamento para espécie
+    operationId: validarSeguranca
+    parameters:
+      - name: medicamentoId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+      - name: especieId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+    responses:
+      '200':
+        description: Lista de alertas (vazio se seguro)
+        content:
+          application/json:
+            schema:
+              type: array
+              items: { $ref: '../components/schemas.yml#/AlertaSeguranca' }
+
+

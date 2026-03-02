@@ -15,12 +15,25 @@ paths:
   /api/v1/especies/{id}:
     $ref: './paths/especies.yml#/paths/~1api~1v1~1especies~1{id}'
 
+  # ADICIONE ESTA LINHA:
+  /api/v1/especies/{especieId}/exame-fisico:
+    $ref: './paths/exames-fisicos.yml#/exame_fisico_por_especie'
+
+  /api/v1/exames-fisicos:
+    $ref: './paths/exames-fisicos.yml#/exames_fisicos_colecao'
+
 components:
   schemas:
     EspecieRequest:
       $ref: "./components/schemas.yml#/EspecieRequest"
     EspecieResponse:
       $ref: "./components/schemas.yml#/EspecieResponse"
+    ModeloExameRequest:
+      $ref: "./components/schemas.yml#/ModeloExameRequest"
+    ModeloExameResponse:
+      $ref: "./components/schemas.yml#/ModeloExameResponse"
+    ApiResponseModeloExame:
+      $ref: "./components/schemas.yml#/ApiResponseModeloExame"
     ApiResponseEspecie:
       $ref: "./components/schemas.yml#/ApiResponseEspecie"
     ApiResponseListaEspecie:

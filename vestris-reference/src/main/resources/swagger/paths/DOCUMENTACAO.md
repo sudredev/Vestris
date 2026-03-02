@@ -1,0 +1,73 @@
+## src\main\resources\swagger\paths
+
+### referencias.yml
+
+```yaml
+# src\main\resources\swagger\paths\referencias.yml
+# Rota: /api/v1/referencias
+referencias_colecao:
+  post:
+    tags: [Referencias]
+    summary: Cadastrar referência
+    operationId: criarReferencia
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/ReferenciaRequest' }
+    responses:
+      '200':
+        description: Sucesso
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseReferencia' }
+  get:
+    tags: [Referencias]
+    summary: Listar todas
+    operationId: listarReferencias
+    responses:
+      '200':
+        description: Lista
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaReferencia' }
+
+# Rota: /api/v1/referencias/{id}
+referencias_item:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+  get:
+    tags: [Referencias]
+    summary: Buscar por ID
+    operationId: buscarReferenciaPorId
+    responses:
+      '200':
+        description: Encontrado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseReferencia' }
+  put:
+    tags: [Referencias]
+    summary: Atualizar referência
+    operationId: atualizarReferencia
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/ReferenciaRequest' }
+    responses:
+      '200':
+        description: Atualizado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseReferencia' }
+  delete:
+    tags: [Referencias]
+    summary: Remover referência
+    description: "Bloqueia se estiver em uso (Protocolos, Vacinas, etc)"
+    operationId: deletarReferencia
+    responses:
+      '204': { description: Removido }
+```
+

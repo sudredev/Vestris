@@ -1,0 +1,34 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Módulo Referências
+  description: Gestão de Bibliografia Científica
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+
+paths:
+  /api/v1/referencias:
+    $ref: './paths/referencias.yml#/referencias_colecao'
+
+  /api/v1/referencias/{id}:
+    $ref: './paths/referencias.yml#/referencias_item'
+
+components:
+  schemas:
+    ReferenciaRequest:
+      $ref: "./components/schemas.yml#/ReferenciaRequest"
+    ReferenciaResponse:
+      $ref: "./components/schemas.yml#/ReferenciaResponse"
+    ApiResponseReferencia:
+      $ref: "./components/schemas.yml#/ApiResponseReferencia"
+    ApiResponseListaReferencia:
+      $ref: "./components/schemas.yml#/ApiResponseListaReferencia"
+```
+

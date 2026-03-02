@@ -23,99 +23,109 @@ public class ApiDelegateEspecies implements EspeciesApiDelegate {
 
     @Override
     public ResponseEntity<ApiResponseEspecie> criarEspecie(EspecieRequest request) {
-        // 1. Converter DTO de Request (Gerado) -> Entidade (Domínio)
-        Especie novaEspecie = new Especie();
-        novaEspecie.setNomePopular(request.getNomePopular());
-        novaEspecie.setNomeCientifico(request.getNomeCientifico());
-        novaEspecie.setFamiliaTaxonomica(request.getFamiliaTaxonomica());
-        novaEspecie.setDescricao(request.getDescricao());
+        Especie entidade = converterParaEntidade(request);
+        Especie salva = servico.criar(entidade);
 
-        // 2. Chamar a Regra de Negócio
-        Especie salva = servico.criar(novaEspecie);
-
-        // 3. Converter Entidade -> DTO de Resposta
-        EspecieResponse responseDto = converterParaResponse(salva);
-
-        // 4. Embrulhar no Wrapper de Sucesso (ApiResponseEspecie)
-        ApiResponseEspecie wrapper = new ApiResponseEspecie();
-        wrapper.setSucesso(true);
-        wrapper.setMensagem("Espécie criada com sucesso.");
-        wrapper.setDados(responseDto);
-        // wrapper.setDataHora(OffsetDateTime.now()); // Se tiver esse campo no YAML
-
-        return ResponseEntity.ok(wrapper);
+        return ResponseEntity.ok(criarResponse(salva, "Espécie criada com sucesso."));
     }
 
     @Override
     public ResponseEntity<ApiResponseListaEspecie> listarEspecies(){
-        List<Especie> listaEntidades = servico.listarTodas();
-
-        // 2. Converter
-        List<EspecieResponse> listaDto = listaEntidades.stream()
+        List<EspecieResponse> listaDto = servico.listarTodas().stream()
                 .map(this::converterParaResponse)
                 .collect(Collectors.toList());
 
-        // 3. Embrulhar
         ApiResponseListaEspecie wrapper = new ApiResponseListaEspecie();
         wrapper.setSucesso(true);
         wrapper.setDados(listaDto);
 
-        // Retorna o objeto wrapper (singular)
         return ResponseEntity.ok(wrapper);
     }
 
     @Override
     public ResponseEntity<ApiResponseEspecie> buscarEspeciePorId(UUID id) {
-        Especie encontrada = servico.buscarPorId(id); // Certifique-se que esse método existe no service
-
-        ApiResponseEspecie response = new ApiResponseEspecie();
-        response.setSucesso(true);
-        response.setDados(converterParaResponse(encontrada)); // Reutilize seu método converter
-
-        return ResponseEntity.ok(response);
+        Especie encontrada = servico.buscarPorId(id);
+        return ResponseEntity.ok(criarResponse(encontrada, null));
     }
 
     @Override
     public ResponseEntity<ApiResponseEspecie> atualizarEspecie(UUID id, EspecieRequest request) {
-        // Converte DTO -> Entidade
-        Especie dadosParaAtualizar = new Especie();
-        dadosParaAtualizar.setNomePopular(request.getNomePopular());
-        dadosParaAtualizar.setNomeCientifico(request.getNomeCientifico());
-        dadosParaAtualizar.setFamiliaTaxonomica(request.getFamiliaTaxonomica());
-        dadosParaAtualizar.setDescricao(request.getDescricao());
-
-        Especie atualizada = servico.atualizar(id, dadosParaAtualizar);
-
-        ApiResponseEspecie response = new ApiResponseEspecie();
-        response.setSucesso(true);
-        response.setDados(converterParaResponse(atualizada));
-
-        return ResponseEntity.ok(response);
+        Especie dados = converterParaEntidade(request);
+        Especie atualizada = servico.atualizar(id, dados);
+        return ResponseEntity.ok(criarResponse(atualizada, "Atualizado com sucesso."));
     }
 
     @Override
     public ResponseEntity<Void> deletarEspecie(UUID id) {
         servico.deletar(id);
-        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+        return ResponseEntity.noContent().build();
     }
 
+    // --- CONVERSORES ---
 
+    private ApiResponseEspecie criarResponse(Especie e, String msg) {
+        ApiResponseEspecie r = new ApiResponseEspecie();
+        r.setSucesso(true);
+        r.setMensagem(msg);
+        r.setDados(converterParaResponse(e));
+        return r;
+    }
 
-    // Método auxiliar para conversão (poderia ser o MapStruct no futuro)
-    private EspecieResponse converterParaResponse(Especie entidade) {
+    // DTO -> Entidade
+    private Especie converterParaEntidade(EspecieRequest r) {
+        Especie e = new Especie();
+        e.setNomePopular(r.getNomePopular());
+        e.setNomeCientifico(r.getNomeCientifico());
+        e.setFamiliaTaxonomica(r.getFamiliaTaxonomica());
+        e.setGrupo(r.getGrupo());
+
+        e.setResumoClinico(r.getResumoClinico());
+        e.setParametrosFisiologicos(r.getParametrosFisiologicos());
+        e.setExpectativaVida(r.getExpectativaVida());
+        e.setPesoAdulto(r.getPesoAdulto());
+
+        e.setTipoDieta(r.getTipoDieta());
+        e.setManejoInfos(r.getManejoInfos());
+        e.setReceitaManejoPadrao(r.getReceitaManejoPadrao());
+        e.setAlertasClinicos(r.getAlertasClinicos());
+        e.setPontosExameFisico(r.getPontosExameFisico());
+
+        e.setHabitat(r.getHabitat());
+        e.setDistribuicaoGeografica(r.getDistribuicaoGeografica());
+        e.setStatusConservacao(r.getStatusConservacao());
+        e.setBibliografiaBase(r.getBibliografiaBase());
+
+        return e;
+    }
+
+    // Entidade -> DTO
+    private EspecieResponse converterParaResponse(Especie e) {
         EspecieResponse dto = new EspecieResponse();
-        // O Swagger gera UUID como UUID mesmo (dependendo da config) ou String.
-        // Se der erro aqui, adicione .toString()
-        dto.setId(entidade.getId());
+        dto.setId(e.getId());
 
-        dto.setNomePopular(entidade.getNomePopular());
-        dto.setNomeCientifico(entidade.getNomeCientifico());
-        dto.setFamiliaTaxonomica(entidade.getFamiliaTaxonomica());
-        dto.setDescricao(entidade.getDescricao());
+        dto.setNomePopular(e.getNomePopular());
+        dto.setNomeCientifico(e.getNomeCientifico());
+        dto.setFamiliaTaxonomica(e.getFamiliaTaxonomica());
+        dto.setGrupo(e.getGrupo());
 
-        // Conversão de Data: LocalDateTime (Banco) -> OffsetDateTime (JSON Standard)
-        if (entidade.getCriadoEm() != null) {
-            dto.setCriadoEm(entidade.getCriadoEm().atOffset(ZoneOffset.UTC));
+        dto.setResumoClinico(e.getResumoClinico());
+        dto.setParametrosFisiologicos(e.getParametrosFisiologicos());
+        dto.setExpectativaVida(e.getExpectativaVida());
+        dto.setPesoAdulto(e.getPesoAdulto());
+
+        dto.setTipoDieta(e.getTipoDieta());
+        dto.setManejoInfos(e.getManejoInfos());
+        dto.setReceitaManejoPadrao(e.getReceitaManejoPadrao());
+        dto.setAlertasClinicos(e.getAlertasClinicos());
+        dto.setPontosExameFisico(e.getPontosExameFisico());
+
+        dto.setHabitat(e.getHabitat());
+        dto.setDistribuicaoGeografica(e.getDistribuicaoGeografica());
+        dto.setStatusConservacao(e.getStatusConservacao());
+        dto.setBibliografiaBase(e.getBibliografiaBase());
+
+        if (e.getCriadoEm() != null) {
+            dto.setCriadoEm(e.getCriadoEm().atOffset(ZoneOffset.UTC));
         }
 
         return dto;

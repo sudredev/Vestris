@@ -14,18 +14,21 @@ import java.util.UUID;
 @Entity
 @Table(name = "dosagens", schema = "clinical_schema")
 public class Dosagem extends EntidadeBase {
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "protocolo_id", nullable = false)
     private Protocolo protocolo;
 
-    @Column(nullable = false)
-    private UUID medicamentoId; // FK Lógica para Pharmacology
+    // --- MEDICAMENTO (HÍBRIDO) ---
+    @Column(name = "medicamento_id", nullable = true)
+    private UUID medicamentoId;
+
+    @Column(name = "medicamento_texto_livre")
+    private String medicamentoTextoLivre;
 
     private Double doseMinima;
     private Double doseMaxima;
-    private String unidade;   // mg/kg
-    private String frequencia; // BID
-    private String duracao;    // 10 dias
-    private String via;        // Oral
+    private String unidade;
+    private String frequencia;
+    private String duracao;
+    private String via;
 }

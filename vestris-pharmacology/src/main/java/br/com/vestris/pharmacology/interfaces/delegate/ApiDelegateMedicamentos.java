@@ -1,5 +1,6 @@
 package br.com.vestris.pharmacology.interfaces.delegate;
 
+import br.com.vestris.pharmacology.application.ServiceDoseReferencia;
 import br.com.vestris.pharmacology.application.ServiceFarmacologia;
 import br.com.vestris.pharmacology.domain.model.Medicamento;
 import br.com.vestris.pharmacology.interfaces.api.MedicamentosApiDelegate;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
     private final ServiceFarmacologia servico;
+    private final ServiceDoseReferencia serviceDose;
 
     @Override
     public ResponseEntity<ApiResponseMedicamento> criarMedicamento(MedicamentoRequest request) {
@@ -28,7 +30,6 @@ public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
         entidade.setFabricante(request.getFabricante());
         entidade.setFormaFarmaceutica(request.getFormaFarmaceutica());
 
-        // O ID do Principio vem do Request e é validado no Serviço
         Medicamento salvo = servico.criarMedicamento(entidade, request.getPrincipioAtivoId());
 
         ApiResponseMedicamento response = new ApiResponseMedicamento();
@@ -84,7 +85,13 @@ public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
         return ResponseEntity.noContent().build();
     }
 
-    // ... converter ...
+    @Override
+    public ResponseEntity<List<String>> listarViasDoMedicamento(UUID id, UUID especieId) {
+        List<String> vias = serviceDose.listarViasPorMedicamentoEEspecie(id, especieId);
+        return ResponseEntity.ok(vias);
+    }
+
+    // --- CONVERSOR ATUALIZADO ---
     private MedicamentoResponse converter(Medicamento med) {
         MedicamentoResponse dto = new MedicamentoResponse();
         dto.setId(med.getId());
@@ -92,7 +99,14 @@ public class ApiDelegateMedicamentos implements MedicamentosApiDelegate {
         dto.setConcentracao(med.getConcentracao());
         dto.setFabricante(med.getFabricante());
         dto.setFormaFarmaceutica(med.getFormaFarmaceutica());
-        dto.setPrincipioAtivoId(med.getPrincipioAtivo().getId());
+
+        // Mapeamento do Princípio Ativo
+        if (med.getPrincipioAtivo() != null) {
+            dto.setPrincipioAtivoId(med.getPrincipioAtivo().getId());
+            // CORREÇÃO: Preenchendo o nome que faltava
+            dto.setPrincipioAtivoNome(med.getPrincipioAtivo().getNome());
+        }
+
         return dto;
     }
 }

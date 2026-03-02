@@ -1,0 +1,137 @@
+## src\main\resources\swagger\components
+
+### schemas.yml
+
+```yaml
+# src\main\resources\swagger\components\schemas.yml
+EspecieRequest:
+  type: object
+  required:
+    - nomePopular
+    - nomeCientifico
+  properties:
+    nomePopular:
+      type: string
+      example: "Calopsita"
+    nomeCientifico:
+      type: string
+      example: "Nymphicus hollandicus"
+    familiaTaxonomica:
+      type: string
+      example: "Psittacidae"
+    grupo:
+      type: string
+      example: "Ave"
+    resumoClinico:
+      type: string
+      description: "Visão geral rápida para o clínico."
+    parametrosFisiologicos:
+      type: string
+      description: "FC, FR, Temp (Markdown)"
+    expectativaVida:
+      type: string
+    pesoAdulto:
+      type: string
+    tipoDieta:
+      type: string
+    manejoInfos:
+      type: string
+      description: "Erros comuns de manejo"
+    receitaManejoPadrao:
+      type: string
+      description: "8 pilares de manejo pré-preenchidos"
+    alertasClinicos:
+      type: string
+      description: "Sensibilidades a medicamentos"
+    pontosExameFisico:
+      type: string
+      description: "O que não esquecer no exame"
+    habitat: { type: string }
+    distribuicaoGeografica: { type: string }
+    statusConservacao: { type: string }
+    bibliografiaBase: { type: string }
+
+
+EspecieResponse:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    nomePopular: { type: string }
+    nomeCientifico: { type: string }
+    familiaTaxonomica: { type: string }
+    grupo: { type: string }
+    resumoClinico: { type: string }
+    parametrosFisiologicos: { type: string }
+    expectativaVida: { type: string }
+    pesoAdulto: { type: string }
+    tipoDieta: { type: string }
+    manejoInfos: { type: string }
+    receitaManejoPadrao: { type: string }
+    alertasClinicos: { type: string }
+    pontosExameFisico: { type: string }
+    habitat: { type: string }
+    distribuicaoGeografica: { type: string }
+    statusConservacao: { type: string }
+    bibliografiaBase: { type: string }
+    criadoEm: { type: string, format: date-time }
+
+# --- MODELOS DE EXAME FÍSICO ---
+
+# Request (O que o Front envia para criar/editar)
+ModeloExameRequest:
+  type: object
+  required: [ textoBase ]
+  properties:
+    textoBase:
+      type: string
+      description: "JSON Stringificado contendo as seções do exame. Ex: [{'titulo': 'Geral', 'conteudo': '...'}]"
+      example: '[{"titulo": "Avaliação Geral", "conteudo": "Postura, alerta..."}]'
+
+# Response (O que o Back devolve)
+ModeloExameResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    especieId:
+      type: string
+      format: uuid
+    textoBase:
+      type: string
+      description: "JSON Stringificado com as seções"
+
+# Wrapper da API
+ApiResponseModeloExame:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem: { type: string }
+    dados: { $ref: '#/ModeloExameResponse' }
+
+ApiResponseEspecie:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    mensagem: { type: string }
+    dados: { $ref: '#/EspecieResponse' }
+    dataHora: { type: string, format: date-time }
+
+ApiResponseListaEspecie:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/EspecieResponse' }
+
+# Wrapper de Lista para Exames
+ApiResponseListaModeloExame:
+  type: object
+  properties:
+    sucesso: { type: boolean }
+    dados:
+      type: array
+      items: { $ref: '#/ModeloExameResponse' }
+```
+

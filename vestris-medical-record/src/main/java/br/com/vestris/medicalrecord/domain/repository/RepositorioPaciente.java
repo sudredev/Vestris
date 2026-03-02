@@ -11,4 +11,8 @@ import java.util.UUID;
 public interface RepositorioPaciente extends JpaRepository<Paciente, UUID> {
     // Busca os pacientes de um determinado veterinário
     List<Paciente> findByVeterinarioId(UUID veterinarioId);
+
+    // --- NOVO: BUSCA INSTITUCIONAL ---
+    // Traz pacientes de qualquer veterinário que esteja na lista (Equipe)
+    List<Paciente> findByVeterinarioIdIn(List<UUID> veterinarioIds);
 }

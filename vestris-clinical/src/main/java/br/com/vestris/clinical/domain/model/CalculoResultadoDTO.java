@@ -36,4 +36,15 @@ public class CalculoResultadoDTO {
 
     // Segurança
     private List<String> alertas;
+
+    // --- NOVOS CAMPOS DE SEGURANÇA (VALIDAÇÃO) ---
+    private String statusSeguranca; // SEGURO, SUBDOSE, etc.
+    private String mensagemSeguranca;
+    private Double refMin; // Dose de referência (mg/kg) mínima usada para validar
+    private Double refMax; // Dose de referência (mg/kg) máxima usada para validar
+    private String refFonte; // Fonte da referência (Ex: Carpenter)
+
+    // --- CÁLCULO LIVRE ---
+    private Double doseCalculadaMg;
+    private Double volumeCalculadoMl;
 }

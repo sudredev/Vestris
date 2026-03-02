@@ -38,16 +38,31 @@ public class ServiceEspecie {
         return repositorio.existsById(id);
     }
 
-    // ATUALIZAR
-    public Especie atualizar(UUID id, Especie dadosAtualizados) {
-        Especie existente = repositorio.findById(id)
-                .orElseThrow(() -> new ExceptionRecursoNaoEncontrado("Espécie", id.toString()));
+    // ATUALIZAR (Mapeamento Completo)
+    public Especie atualizar(UUID id, Especie dados) {
+        Especie existente = buscarPorId(id);
 
-        // Atualiza os campos (Exceto ID e Datas)
-        existente.setNomePopular(dadosAtualizados.getNomePopular());
-        existente.setNomeCientifico(dadosAtualizados.getNomeCientifico());
-        existente.setFamiliaTaxonomica(dadosAtualizados.getFamiliaTaxonomica());
-        existente.setDescricao(dadosAtualizados.getDescricao());
+        existente.setNomePopular(dados.getNomePopular());
+        existente.setNomeCientifico(dados.getNomeCientifico());
+        existente.setFamiliaTaxonomica(dados.getFamiliaTaxonomica());
+        existente.setGrupo(dados.getGrupo());
+
+        existente.setResumoClinico(dados.getResumoClinico());
+        existente.setParametrosFisiologicos(dados.getParametrosFisiologicos());
+        existente.setExpectativaVida(dados.getExpectativaVida());
+        existente.setPesoAdulto(dados.getPesoAdulto());
+
+        existente.setTipoDieta(dados.getTipoDieta());
+        existente.setManejoInfos(dados.getManejoInfos());
+
+        existente.setAlertasClinicos(dados.getAlertasClinicos());
+        existente.setPontosExameFisico(dados.getPontosExameFisico());
+
+        existente.setHabitat(dados.getHabitat());
+        existente.setDistribuicaoGeografica(dados.getDistribuicaoGeografica());
+        existente.setStatusConservacao(dados.getStatusConservacao());
+
+        existente.setBibliografiaBase(dados.getBibliografiaBase());
 
         return repositorio.save(existente);
     }
@@ -57,12 +72,10 @@ public class ServiceEspecie {
         if (!repositorio.existsById(id)) {
             throw new ExceptionRecursoNaoEncontrado("Espécie", id.toString());
         }
-
         try {
             repositorio.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            // Captura erro do banco se tentar apagar algo que tem filhos (FK)
-            throw new ExcecaoRegraNegocio("Não é possível remover esta espécie pois ela possui registros vinculados (Doenças, Protocolos, etc).");
+            throw new ExcecaoRegraNegocio("Não é possível remover esta espécie pois ela possui registros vinculados.");
         }
     }
 }

@@ -1,0 +1,40 @@
+# ROTA: /api/v1/auditoria (Listagem)
+auditoria_colecao:
+  get:
+    tags: [Auditoria]
+    summary: Listar logs de auditoria da clínica
+    operationId: listarLogsAuditoria
+    parameters:
+      - name: clinicaId
+        in: query
+        required: true
+        schema: { type: string, format: uuid }
+      - name: dataInicio
+        in: query
+        schema: { type: string, format: date }
+      - name: dataFim
+        in: query
+        schema: { type: string, format: date }
+    responses:
+      '200':
+        description: Lista de eventos
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseListaAuditoria' }
+
+# NOVA ROTA: /api/v1/auditoria/evento (Registro manual do Front)
+auditoria_evento:
+  post:
+    tags: [Auditoria]
+    summary: Registrar evento de frontend
+    operationId: registrarEventoAuditoria
+    requestBody:
+      content:
+        application/json:
+          schema: { $ref: '../components/schemas.yml#/EventoAuditoriaRequest' }
+    responses:
+      '200':
+        description: Evento registrado
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yml#/ApiResponseSucesso' }

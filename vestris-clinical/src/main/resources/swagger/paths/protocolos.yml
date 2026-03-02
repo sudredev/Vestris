@@ -1,3 +1,4 @@
+# vestris-clinical/src/main/resources/swagger/paths/protocolos.yml
 paths:
   /api/v1/protocolos:
     post:
@@ -69,6 +70,7 @@ paths:
       tags:
         - Protocolos
       summary: Listar protocolos de uma doença
+      description: "Retorna protocolos Oficiais, Institucionais (da clínica) e Próprios (do usuário)."
       operationId: listarProtocolosPorDoenca
       parameters:
         - name: doencaId
@@ -77,6 +79,15 @@ paths:
           schema:
             type: string
             format: uuid
+        # NOVOS PARÂMETROS PARA FILTRAGEM INTELIGENTE
+        - name: clinicaId
+          in: query
+          required: false
+          schema: { type: string, format: uuid }
+        - name: usuarioId
+          in: query
+          required: false
+          schema: { type: string, format: uuid }
       responses:
         '200':
           description: Lista

@@ -14,25 +14,45 @@ import java.util.UUID;
 @Entity
 @Table(name = "protocolos", schema = "clinical_schema")
 public class Protocolo extends EntidadeBase {
-
     @Column(nullable = false)
     private String titulo;
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "doenca_id", nullable = false)
+    // --- DOENÇA (HÍBRIDO) ---
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "doenca_id", nullable = true)
     private Doenca doenca;
 
-    @Column(nullable = false)
-    private UUID referenciaId; // FK Lógica para Reference
+    @Column(name = "doenca_texto_livre")
+    private String doencaTextoLivre;
 
-    // Um Protocolo tem várias Dosagens
+    // --- REFERÊNCIA (HÍBRIDO) ---
+    @Column(name = "referencia_id")
+    private UUID referenciaId;
+
+    @Column(name = "referencia_texto")
+    private String referenciaTexto;
+
+    // --- ORIGEM ---
+    @Enumerated(EnumType.STRING)
+    private OrigemProtocolo origem; // OFICIAL, PROPRIO
+
+    private UUID autorId;
+
+    @Column(name = "clinica_id")
+    private UUID clinicaId; // Novo campo
+
+    public enum OrigemProtocolo {
+        OFICIAL,
+        PROPRIO,
+        INSTITUCIONAL // Novo Enum
+    }
+
     @OneToMany(mappedBy = "protocolo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dosagem> dosagens = new ArrayList<>();
 
-    // Método helper para adicionar dosagem
     public void adicionarDosagem(Dosagem dosagem) {
         dosagens.add(dosagem);
         dosagem.setProtocolo(this);

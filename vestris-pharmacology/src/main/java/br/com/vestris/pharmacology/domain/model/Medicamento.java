@@ -24,4 +24,5 @@ public class Medicamento extends EntidadeBase {
     @ManyToOne(optional = false)
     @JoinColumn(name = "principio_ativo_id", nullable = false)
     private PrincipioAtivo principioAtivo;
+
 }

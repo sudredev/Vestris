@@ -31,9 +31,15 @@ paths:
 
   /api/v1/calculadora/dosagem:
     $ref: './paths/calculadora.yml#/calculadora_item'
+    # ADICIONE ESTA LINHA:
+  /api/v1/calculadora/validar:
+    $ref: './paths/calculadora.yml#/calculadora_validar'
+
+  /api/v1/calculadora/livre:
+    $ref: './paths/calculadora.yml#/calculadora_livre'
 
 
-    # Importando os componentes (necessário declarar aqui também para o parser raiz entender)
+# Importando os componentes (necessário declarar aqui também para o parser raiz entender)
 components:
   schemas:
     DoencaRequest:
@@ -68,7 +74,11 @@ components:
       $ref: "./components/schemas.yml#/ApiResponseProtocoloCompleto"
     ApiResponseCalculo:
       $ref: "./components/schemas.yml#/ApiResponseCalculo"
-
+    # ENUMS ATUALIZADOS PARA O GERADOR ENCONTRAR
+    OrigemProtocoloEnum:
+      $ref: "./components/schemas.yml#/OrigemProtocoloEnum"
+    CalculoValidacaoRequest:
+      $ref: "./components/schemas.yml#/CalculoValidacaoRequest"
 
 
 

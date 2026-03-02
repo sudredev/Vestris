@@ -1,0 +1,85 @@
+## src\main\resources\swagger
+
+### openapi.yml
+
+```yaml
+# src\main\resources\swagger\openapi.yml
+openapi: 3.0.3
+info:
+  title: Vestris - Prontuário Eletrônico
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  # --- PACIENTES ---
+  /api/v1/pacientes:
+    $ref: './paths/pacientes.yml#/pacientes_item'
+  /api/v1/pacientes/{id}:
+    $ref: './paths/pacientes.yml#/paciente_por_id'
+
+  # --- ATENDIMENTOS ---
+
+  # CORREÇÃO: Adicionada rota de Agendamento
+  /api/v1/atendimentos/agendar:
+    $ref: './paths/atendimentos.yml#/agendamento_item'
+
+  /api/v1/atendimentos:
+    $ref: './paths/atendimentos.yml#/atendimentos_item'
+
+  /api/v1/atendimentos/{id}:
+    $ref: './paths/atendimentos.yml#/atendimentos_por_id'
+
+  /api/v1/atendimentos/{id}/status:
+    $ref: './paths/atendimentos.yml#/atendimentos_status'
+
+  /api/v1/pacientes/{pacienteId}/atendimentos:
+    $ref: './paths/atendimentos.yml#/atendimentos_por_paciente'
+
+  /api/v1/atendimentos/{id}/finalizar:
+    $ref: './paths/atendimentos.yml#/atendimentos_finalizados'
+
+    # --- NOVAS ROTAS DE EXAMES ---
+  /api/v1/atendimentos/{atendimentoId}/exames:
+    $ref: './paths/exames-anexo.yml#/exames_por_atendimento'
+
+  /api/v1/exames/{id}:
+    $ref: './paths/exames-anexo.yml#/exame_item'
+
+components:
+  schemas:
+    PacienteRequest:
+      $ref: "./components/schemas.yml#/PacienteRequest"
+    PacienteResponse:
+      $ref: "./components/schemas.yml#/PacienteResponse"
+
+    # CORREÇÃO: Adicionados os DTOs novos para o gerador criar o Java
+    AgendamentoRequest:
+      $ref: "./components/schemas.yml#/AgendamentoRequest"
+    FinalizacaoAtendimentoRequest:
+      $ref: "./components/schemas.yml#/FinalizacaoAtendimentoRequest"
+
+    AtendimentoRequest:
+      $ref: "./components/schemas.yml#/AtendimentoRequest"
+    AtendimentoResponse:
+      $ref: "./components/schemas.yml#/AtendimentoResponse"
+    ApiResponsePaciente:
+      $ref: "./components/schemas.yml#/ApiResponsePaciente"
+    ApiResponseListaPaciente:
+      $ref: "./components/schemas.yml#/ApiResponseListaPaciente"
+    ApiResponseAtendimento:
+      $ref: "./components/schemas.yml#/ApiResponseAtendimento"
+    ApiResponseListaAtendimento:
+      $ref: "./components/schemas.yml#/ApiResponseListaAtendimento"
+    StatusAtendimentoEnum:
+      $ref: "./components/schemas.yml#/StatusAtendimentoEnum"
+    SexoEnum:
+      $ref: "./components/schemas.yml#/SexoEnum"
+    ExameAnexoResponse:
+      $ref: "./components/schemas.yml#/ExameAnexoResponse"
+    ApiResponseExameAnexo:
+      $ref: "./components/schemas.yml#/ApiResponseExameAnexo"
+    ApiResponseListaExameAnexo:
+      $ref: "./components/schemas.yml#/ApiResponseListaExameAnexo"
+```
+
