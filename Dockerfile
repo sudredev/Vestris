@@ -11,7 +11,7 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # ALTERE para o módulo que gera o jar executável
-COPY --from=build /app/vestris-api/target/*.jar app.jar
+COPY --from=build /app/vestris-portal/target/*.jar app.jar
 
 EXPOSE 8080
 
