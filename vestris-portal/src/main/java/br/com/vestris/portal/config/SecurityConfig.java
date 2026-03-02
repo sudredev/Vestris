@@ -12,18 +12,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-                .csrf(AbstractHttpConfigurer::disable) // Desabilita CSRF para API
+                .cors(cors -> {
+                }) // 🔥 ESSA LINHA FALTAVA
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Libera Swagger e rotas de Auth
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/api/v1/auth/**" // Login e Registro livres
+                                "/api/v1/auth/**"
                         ).permitAll()
-                        // Por enquanto, libera tudo para facilitar os testes das outras fases
-                        // Depois vamos bloquear: .anyRequest().authenticated()
                         .anyRequest().permitAll()
                 );
 

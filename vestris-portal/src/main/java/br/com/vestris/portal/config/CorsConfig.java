@@ -16,12 +16,13 @@ public class CorsConfig{
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permite múltiplos domínios (inclusive subdomínios)
+        // Permite localhost (dev), Railway e futuro domínio próprio
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
                 "https://localhost:*",
                 "https://*.railway.app",
-                "https://*.vestris.com.br" // futuro domínio próprio
+                "https://vestris-production.up.railway.app",
+                "https://*.vestris.com.br"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -31,6 +32,11 @@ public class CorsConfig{
         configuration.setAllowedHeaders(List.of("*"));
 
         configuration.setAllowCredentials(true);
+
+        configuration.setExposedHeaders(List.of(
+                "Authorization",
+                "Content-Type"
+        ));
 
         configuration.setMaxAge(3600L);
 
