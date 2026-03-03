@@ -16,13 +16,10 @@ public class CorsConfig{
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Permite localhost (dev), Railway e futuro domínio próprio
         configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:*",
-                "https://localhost:*",
-                "https://*.railway.app",
-                "https://vestris-production.up.railway.app",
-                "https://*.vestris.com.br"
+                "https://*.vercel.app",
+                "https://*.railway.app"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -31,18 +28,14 @@ public class CorsConfig{
 
         configuration.setAllowedHeaders(List.of("*"));
 
-        configuration.setAllowCredentials(true);
+        configuration.setExposedHeaders(List.of("Authorization"));
 
-        configuration.setExposedHeaders(List.of(
-                "Authorization",
-                "Content-Type"
-        ));
+        configuration.setAllowCredentials(true);
 
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-
         return source;
     }
 }
